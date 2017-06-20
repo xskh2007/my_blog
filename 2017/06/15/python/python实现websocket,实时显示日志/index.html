@@ -1,0 +1,1132 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="MAbZIIQ7Dw" />
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="websocket," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="一、开始的话使用python简单的实现websocket服务器，可以在浏览器上实时显示远程服务器的日志信息。之前做了一个web版的发布系统，但没实现在线看日志，每次发布版本后，都需要登录到服务器上查看日志，非常麻烦，为了偷懒，能在页面点几下按钮完成工作，所以这几天查找了这方面的资料，实现了这个功能，瞬间觉的看日志什么的，太方便了，以后也可以给开发们查日志，再也不用麻烦运维了，废话少说，先看效果吧">
+<meta name="keywords" content="websocket">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用python简单的实现websocket服务器">
+<meta property="og:url" content="http://yoursite.com/2017/06/15/python/python实现websocket,实时显示日志/index.html">
+<meta property="og:site_name" content="向山看海">
+<meta property="og:description" content="一、开始的话使用python简单的实现websocket服务器，可以在浏览器上实时显示远程服务器的日志信息。之前做了一个web版的发布系统，但没实现在线看日志，每次发布版本后，都需要登录到服务器上查看日志，非常麻烦，为了偷懒，能在页面点几下按钮完成工作，所以这几天查找了这方面的资料，实现了这个功能，瞬间觉的看日志什么的，太方便了，以后也可以给开发们查日志，再也不用麻烦运维了，废话少说，先看效果吧">
+<meta property="og:updated_time" content="2017-06-19T03:02:31.348Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用python简单的实现websocket服务器">
+<meta name="twitter:description" content="一、开始的话使用python简单的实现websocket服务器，可以在浏览器上实时显示远程服务器的日志信息。之前做了一个web版的发布系统，但没实现在线看日志，每次发布版本后，都需要登录到服务器上查看日志，非常麻烦，为了偷懒，能在页面点几下按钮完成工作，所以这几天查找了这方面的资料，实现了这个功能，瞬间觉的看日志什么的，太方便了，以后也可以给开发们查日志，再也不用麻烦运维了，废话少说，先看效果吧">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/15/python/python实现websocket,实时显示日志/"/>
+
+
+
+
+
+  <title>使用python简单的实现websocket服务器 | 向山看海</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">向山看海</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-zjump">
+          <a href="/zjump/" rel="section">
+            
+            zjump
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/15/python/python实现websocket,实时显示日志/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="qiantu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向山看海">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用python简单的实现websocket服务器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-15T14:17:27+08:00">
+                2017-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/websocket/" itemprop="url" rel="index">
+                    <span itemprop="name">websocket</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2017/06/15/python/python实现websocket,实时显示日志/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!-- toc -->
+<h4 id="一、开始的话"><a href="#一、开始的话" class="headerlink" title="一、开始的话"></a>一、开始的话</h4><p>使用python简单的实现websocket服务器，可以在浏览器上实时显示远程服务器的日志信息。<br>之前做了一个web版的发布系统，但没实现在线看日志，每次发布版本后，都需要登录到服务器上查看日志，非常麻烦，为了偷懒，能在页面点几下按钮完成工作，所以这几天查找了这方面的资料，实现了这个功能，瞬间觉的看日志什么的，太方便了，以后也可以给开发们查日志，再也不用麻烦运维了，废话少说，先看效果吧。<br>[图片]</p>
+<h4 id="二、代码"><a href="#二、代码" class="headerlink" title="二、代码"></a>二、代码</h4><p>在实现这功能前，看过别人的代码，发现很多都是只能在web上显示本地的日志，不能看远程主机上的日志，有些能看远程日志的是引用了其他框架（例如bottle，tornado）来实现的，而且所有这些都是重写thread的run方法来实现的，由于本人技术太菜，不知道怎么改成自己需要的样子，而且我是用django这个web框架的，不想引用太多框架，搞的太复杂，所以用python来实现websocket服务器。由于技术问题，代码有点粗糙，不过能实现功能就行，先将就着用吧。<br>执行下面命令启动django和websocketserver<br>    nohup python manage.py runserver 10.1.12.110 &amp;<br>    nohup python websocketserver.py &amp;</p>
+<h4 id="启动websocket后，接收到请求，起一个线程和客户端握手，然后根据客户端发送的ip和type，去数据库查找对应的日志路径，用paramiko模块ssh登录到远程服务器上tail查看日志，再推送给浏览器，服务端完整代码如下："><a href="#启动websocket后，接收到请求，起一个线程和客户端握手，然后根据客户端发送的ip和type，去数据库查找对应的日志路径，用paramiko模块ssh登录到远程服务器上tail查看日志，再推送给浏览器，服务端完整代码如下：" class="headerlink" title="启动websocket后，接收到请求，起一个线程和客户端握手，然后根据客户端发送的ip和type，去数据库查找对应的日志路径，用paramiko模块ssh登录到远程服务器上tail查看日志，再推送给浏览器，服务端完整代码如下："></a>启动websocket后，接收到请求，起一个线程和客户端握手，然后根据客户端发送的ip和type，去数据库查找对应的日志路径，用paramiko模块ssh登录到远程服务器上tail查看日志，再推送给浏览器，服务端完整代码如下：</h4><pre><code># coding:utf-8
+import struct
+import base64
+import hashlib
+import socket
+import threading
+from public.public import get_ssh
+import os
+
+
+def recv_data(conn):    # 服务器解析浏览器发送的信息
+    try:
+        all_data = conn.recv(1024)
+        if not len(all_data):
+            return False
+    except:
+        pass
+    else:
+        code_len = ord(all_data[1]) &amp; 127
+        if code_len == 126:
+            masks = all_data[4:8]
+            data = all_data[8:]
+        elif code_len == 127:
+            masks = all_data[10:14]
+            data = all_data[14:]
+        else:
+            masks = all_data[2:6]
+            data = all_data[6:]
+        raw_str = &quot;&quot;
+        i = 0
+        for d in data:
+            raw_str += chr(ord(d) ^ ord(masks[i % 4]))
+            i += 1
+        return raw_str
+
+
+def send_data(conn, data):   # 服务器处理发送给浏览器的信息
+    if data:
+        data = str(data)
+    else:
+        return False
+    token = &quot;\x81&quot;
+    length = len(data)
+    if length &lt; 126:
+        token += struct.pack(&quot;B&quot;, length)    # struct为Python中处理二进制数的模块，二进制流为C，或网络流的形式。
+    elif length &lt;= 0xFFFF:
+        token += struct.pack(&quot;!BH&quot;, 126, length)
+    else:
+        token += struct.pack(&quot;!BQ&quot;, 127, length)
+    data = &apos;%s%s&apos; % (token, data)
+    conn.send(data)
+    return True
+
+
+def handshake(conn, address, thread_name):
+    headers = {}
+    shake = conn.recv(1024)
+    if not len(shake):
+        return False
+
+    print (&apos;%s : Socket start handshaken with %s:%s&apos; % (thread_name, address[0], address[1]))
+    header, data = shake.split(&apos;\r\n\r\n&apos;, 1)
+    for line in header.split(&apos;\r\n&apos;)[1:]:
+        key, value = line.split(&apos;: &apos;, 1)
+        headers[key] = value
+
+    if &apos;Sec-WebSocket-Key&apos; not in headers:
+        print (&apos;%s : This socket is not websocket, client close.&apos; % thread_name)
+        conn.close()
+        return False
+
+    MAGIC_STRING = &apos;258EAFA5-E914-47DA-95CA-C5AB0DC85B11&apos;
+    HANDSHAKE_STRING = &quot;HTTP/1.1 101 Switching Protocols\r\n&quot; \
+                    &quot;Upgrade:websocket\r\n&quot; \
+                    &quot;Connection: Upgrade\r\n&quot; \
+                    &quot;Sec-WebSocket-Accept: {1}\r\n&quot; \
+                    &quot;WebSocket-Origin: {2}\r\n&quot; \
+                    &quot;WebSocket-Location: ws://{3}/\r\n\r\n&quot;
+
+    sec_key = headers[&apos;Sec-WebSocket-Key&apos;]
+    res_key = base64.b64encode(hashlib.sha1(sec_key + MAGIC_STRING).digest())
+    str_handshake = HANDSHAKE_STRING.replace(&apos;{1}&apos;, res_key).replace(&apos;{2}&apos;, headers[&apos;Origin&apos;]).replace(&apos;{3}&apos;, headers[&apos;Host&apos;])
+    conn.send(str_handshake)
+    print (&apos;%s : Socket handshaken with %s:%s success&apos; % (thread_name, address[0], address[1]))
+    print &apos;Start transmitting data...&apos;
+    print &apos;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -&apos;
+    return True
+
+
+def dojob(conn, address, thread_name):
+    from mode import models
+    handshake(conn, address, thread_name)     # 握手
+    log_info = recv_data(conn)
+    log_ip = log_info.split(&quot;:&quot;)[0]
+    log_type = log_info.split(&quot;:&quot;)[1]
+
+    auth_ = models.Authentication.objects.get(ip=log_ip)
+    user = auth_.a_user
+    pwd = auth_.a_password
+    try:
+        log_path = models.LogPath.objects.get(ip=log_ip, type_name__contains=log_type).log_path
+    except Exception, e:
+        send_data(conn, e)
+        conn.close()
+        print &quot;Error:&quot; + str(e)
+        print (&apos;%s : Socket close with %s:%s&apos; % (thread_name, address[0], address[1]))
+        return
+    conn.setblocking(0)                       # 设置socket为非阻塞
+    ssh = get_ssh(log_ip, user, pwd)
+    ssh_t = ssh.get_transport()
+    chan = ssh_t.open_session()
+    chan.setblocking(0)   # 设置非阻塞
+    chan.exec_command(&apos;tail -f %s&apos; % log_path)
+    while True:
+        clientdata = recv_data(conn)
+        if clientdata is not None and &apos;quit&apos; in clientdata:
+            print (&apos;%s : Socket close with %s:%s&apos; % (thread_name, address[0], address[1]))
+            send_data(conn, &apos;close connect&apos;)
+            conn.close()
+            break
+        while True:
+            while chan.recv_ready():
+                clientdata1 = recv_data(conn)
+                if clientdata1 is not None and &apos;quit&apos; in clientdata1:
+                    print (&apos;%s : Socket close with %s:%s&apos; % (thread_name, address[0], address[1]))
+                    send_data(conn, &apos;close connect&apos;)
+                    conn.close()
+                    break
+                log_msg = chan.recv(10000).strip()
+                print log_msg
+                send_data(conn, log_msg)
+            if chan.exit_status_ready():
+                break
+            clientdata2 = recv_data(conn)
+            if clientdata2 is not None and &apos;quit&apos; in clientdata2:
+                print (&apos;%s : Socket close with %s:%s&apos; % (thread_name, address[0], address[1]))
+                send_data(conn, &apos;close connect&apos;)
+                conn.close()
+                break
+        break
+
+
+def ws_service():
+
+    os.environ.setdefault(&quot;DJANGO_SETTINGS_MODULE&quot;, &quot;lbg.settings&quot;)
+    index = 1
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.bind((&quot;127.0.0.1&quot;, 12345))
+    sock.listen(100)
+
+    print (&apos;\r\n\r\nWebsocket server start, wait for connect!&apos;)
+    print &apos;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - -&apos;
+    while True:
+        connection, address = sock.accept()
+        thread_name = &apos;thread_%s&apos; % index
+        print (&apos;%s : Connection from %s:%s&apos; % (thread_name, address[0], address[1]))
+        t = threading.Thread(target=dojob, args=(connection, address, thread_name))
+        t.start()
+        index += 1
+
+
+ws_service()
+</code></pre><h4 id="get-ssh的代码如下："><a href="#get-ssh的代码如下：" class="headerlink" title="get_ssh的代码如下："></a>get_ssh的代码如下：</h4><pre><code>import paramiko
+def get_ssh(ip, user, pwd):
+    try:
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(ip, 22, user, pwd, timeout=15)
+        return ssh
+    except Exception, e:
+        print e
+        return &quot;False&quot;
+</code></pre><h4 id="打开页面时，自动连接websocket服务器，完成握手，并发送ip和type给服务端，所以可以看不同类型，不同机器上的日志，"><a href="#打开页面时，自动连接websocket服务器，完成握手，并发送ip和type给服务端，所以可以看不同类型，不同机器上的日志，" class="headerlink" title="打开页面时，自动连接websocket服务器，完成握手，并发送ip和type给服务端，所以可以看不同类型，不同机器上的日志，"></a>打开页面时，自动连接websocket服务器，完成握手，并发送ip和type给服务端，所以可以看不同类型，不同机器上的日志，</h4><p>图片</p>
+<h4 id="页面代码如下"><a href="#页面代码如下" class="headerlink" title="页面代码如下:"></a>页面代码如下:</h4><pre><code>&lt;!DOCTYPE html&gt;  
+&lt;html&gt;  
+&lt;head&gt;
+{% include 'head_script.html' %}
+&lt;style&gt;
+    #log {
+        width: 440px;
+        height: 200px;
+        border: 1px solid #7F9DB9;
+        overflow: auto;
+    }
+    pre {
+        margin: 0 0 0;
+        padding: 0;
+        border: hidden;
+        background-color: #0c0c0c;
+        color: #00ff00;
+    }
+    #btns {
+        text-align: right;   
+    }
+&lt;/style&gt;
+    &lt;script&gt;
+        var socket;
+        function init() {  
+            var host = &quot;ws://127.0.0.1:12345/&quot;;
+            var ips=&quot;{{ ip }}&quot;;
+            var types=&quot;{{ type }}&quot;;
+            var log_msg = ips +&quot;:&quot;+ types;
+
+            console.log(log_msg);
+            try {
+                socket = new WebSocket(host);  
+                socket.onopen = function () {
+                    log(&apos;Connected&apos;);
+                    socket.send(log_msg);
+                };  
+                socket.onmessage = function (msg) {  
+                    log(msg.data);
+                    var obje = document.getElementById(&quot;log&quot;);   //日志过多时清屏
+                    var textlength = obje.scrollHeight;
+                    if (textlength &gt; 10000) {
+                        obje.innerHTML = &apos;&apos;;
+                    }
+                };  
+                socket.onclose = function () {
+                    log(&quot;Lose Connection!&quot;);
+                    $(&quot;#start&quot;).attr(&apos;disabled&apos;, false);
+                    $(&quot;#stop&quot;).attr(&apos;disabled&apos;, true);
+                };
+                $(&quot;#start&quot;).attr(&apos;disabled&apos;, true);
+                $(&quot;#stop&quot;).attr(&apos;disabled&apos;, false);
+            }
+            catch (ex) {  
+                log(ex);  
+            }
+        }
+        window.onbeforeunload = function () {  
+            try {  
+                socket.send(&apos;quit&apos;);  
+                socket.close();  
+                socket = null;  
+            }  
+            catch (ex) {  
+                log(ex);  
+            }  
+        };
+        function log(msg) {
+            var obje = document.getElementById(&quot;log&quot;);
+            obje.innerHTML += &apos;&lt;pre&gt;&lt;code&gt;&apos; + msg + &apos;&lt;/code&gt;&lt;/pre&gt;&apos;;
+            obje.scrollTop = obje.scrollHeight;   //滚动条显示最新数据
+        }
+        function stop() {
+            try {
+                log(&apos;Close connection!&apos;);
+                socket.send(&apos;quit&apos;);
+                socket.close();
+                socket = null;
+                $(&quot;#start&quot;).attr(&apos;disabled&apos;, false);
+                $(&quot;#stop&quot;).attr(&apos;disabled&apos;, true);
+            }
+            catch (ex) {
+                log(ex);
+            }
+        }
+        function closelayer() {
+            try {
+                log(&apos;Close connection!&apos;);
+                socket.send(&apos;quit&apos;);
+                socket.close();
+                socket = null;
+            }
+            catch (ex) {
+                log(ex);
+            }
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭
+        }
+    &lt;/script&gt;
+&lt;/head&gt;  
+
+&lt;body onload=&quot;init()&quot;&gt;  
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-lg-12&quot;&gt;
+            &lt;div id=&quot;log&quot; style=&quot;width: 100%;height:440px;background-color: #0c0c0c;overflow:scroll;overflow-x: auto;&quot;&gt;&lt;/div&gt;
+            &lt;br&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-lg-12&quot;&gt;
+            &lt;div id=&quot;btns&quot;&gt;
+                &lt;input disabled=&quot;disabled&quot; type=&quot;button&quot; class=&quot;btn btn-primary btn-sm&quot; value=&quot;start&quot; id=&quot;start&quot; onclick=&quot;init()&quot;&gt;
+                &lt;input disabled=&quot;disabled&quot; type=&quot;button&quot; class=&quot;btn btn-primary btn-sm&quot; value=&quot;stop&quot; id=&quot;stop&quot; onclick=&quot;stop()&quot; &gt;
+                &lt;input type=&quot;button&quot; class=&quot;btn btn-primary btn-sm&quot; value=&quot;close&quot; id=&quot;close&quot; onclick=&quot;closelayer()&quot; &gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/body&gt;  
+{% include 'foot_script.html' %}
+&lt;/html&gt; 
+</code></pre>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/websocket/" rel="tag"># websocket</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/15/zabbix/zabbix3.2.1/" rel="next" title="zabbix3.2.1分布式监控，采用agent主动模式">
+                <i class="fa fa-chevron-left"></i> zabbix3.2.1分布式监控，采用agent主动模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/15/python/Python-Jenkins API使用 —— 在后端代码中操控Jenkins/" rel="prev" title="Python-Jenkins API使用 —— 在后端代码中操控Jenkins">
+                Python-Jenkins API使用 —— 在后端代码中操控Jenkins <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="qiantu" />
+          <p class="site-author-name" itemprop="name">qiantu</p>
+           
+              <p class="site-description motion-element" itemprop="description">You think you can, you can.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cclouds.me/" title="cclouds" target="_blank">cclouds</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、开始的话"><span class="nav-number">1.</span> <span class="nav-text">一、开始的话</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、代码"><span class="nav-number">2.</span> <span class="nav-text">二、代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动websocket后，接收到请求，起一个线程和客户端握手，然后根据客户端发送的ip和type，去数据库查找对应的日志路径，用paramiko模块ssh登录到远程服务器上tail查看日志，再推送给浏览器，服务端完整代码如下："><span class="nav-number">3.</span> <span class="nav-text">启动websocket后，接收到请求，起一个线程和客户端握手，然后根据客户端发送的ip和type，去数据库查找对应的日志路径，用paramiko模块ssh登录到远程服务器上tail查看日志，再推送给浏览器，服务端完整代码如下：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#get-ssh的代码如下："><span class="nav-number">4.</span> <span class="nav-text">get_ssh的代码如下：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#打开页面时，自动连接websocket服务器，完成握手，并发送ip和type给服务端，所以可以看不同类型，不同机器上的日志，"><span class="nav-number">5.</span> <span class="nav-text">打开页面时，自动连接websocket服务器，完成握手，并发送ip和type给服务端，所以可以看不同类型，不同机器上的日志，</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#页面代码如下"><span class="nav-number">6.</span> <span class="nav-text">页面代码如下:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">qiantu</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>访问总量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "b587eae6d1cc415a82e921c882914d85",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

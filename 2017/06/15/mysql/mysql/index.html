@@ -1,0 +1,1033 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="MAbZIIQ7Dw" />
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="mysql," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="DQL、DML、DDL、DCL的概念与区别SQL(Structure Query Language)语言是数据库的核心语言。 SQL的发展是从1974年开始的，其发展过程如下：1974年—–由Boyce和Chamberlin提出，当时称SEQUEL。1976年—–IBM公司的Sanjase研究所在研制RDBMS SYSTEM R时改为SQL。1979年—–Oracle公司发表第一个基于SQL的商">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DQL、DML、DDL、DCL的概念与区别">
+<meta property="og:url" content="http://yoursite.com/2017/06/15/mysql/mysql/index.html">
+<meta property="og:site_name" content="向山看海">
+<meta property="og:description" content="DQL、DML、DDL、DCL的概念与区别SQL(Structure Query Language)语言是数据库的核心语言。 SQL的发展是从1974年开始的，其发展过程如下：1974年—–由Boyce和Chamberlin提出，当时称SEQUEL。1976年—–IBM公司的Sanjase研究所在研制RDBMS SYSTEM R时改为SQL。1979年—–Oracle公司发表第一个基于SQL的商">
+<meta property="og:updated_time" content="2017-06-19T03:02:31.283Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DQL、DML、DDL、DCL的概念与区别">
+<meta name="twitter:description" content="DQL、DML、DDL、DCL的概念与区别SQL(Structure Query Language)语言是数据库的核心语言。 SQL的发展是从1974年开始的，其发展过程如下：1974年—–由Boyce和Chamberlin提出，当时称SEQUEL。1976年—–IBM公司的Sanjase研究所在研制RDBMS SYSTEM R时改为SQL。1979年—–Oracle公司发表第一个基于SQL的商">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/15/mysql/mysql/"/>
+
+
+
+
+
+  <title>DQL、DML、DDL、DCL的概念与区别 | 向山看海</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">向山看海</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-zjump">
+          <a href="/zjump/" rel="section">
+            
+            zjump
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/15/mysql/mysql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="qiantu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向山看海">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DQL、DML、DDL、DCL的概念与区别</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-15T14:17:27+08:00">
+                2017-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2017/06/15/mysql/mysql/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!-- toc -->
+<h1 id="DQL、DML、DDL、DCL的概念与区别"><a href="#DQL、DML、DDL、DCL的概念与区别" class="headerlink" title="DQL、DML、DDL、DCL的概念与区别"></a>DQL、DML、DDL、DCL的概念与区别</h1><p>SQL(Structure Query Language)语言是数据库的核心语言。</p>
+<p>SQL的发展是从1974年开始的，其发展过程如下：<br>1974年—–由Boyce和Chamberlin提出，当时称SEQUEL。<br>1976年—–IBM公司的Sanjase研究所在研制RDBMS SYSTEM R<br>时改为SQL。<br>1979年—–Oracle公司发表第一个基于SQL的商业化RDBMS产品。<br>1982年—–IBM公司出版第一个RDBMS语言SQL/DS。<br>1985年—–IBM公司出版第一个RDBMS语言DB2。<br>1986年—–美国国家标准化组织ANSI宣布SQL作为数据库工业标准。<br>SQL是一个标准的数据库语言，是面向集合的描述性非过程化语言。<br>它功能强，效率高，简单易学易维护（迄今为止，我还没见过比它还好<br>学的语言）。然而SQL语言由于以上优点，同时也出现了这样一个问题：<br>它是非过程性语言，即大多数语句都是独立执行的，与上下文无关，而<br>绝大部分应用都是一个完整的过程，显然用SQL完全实现这些功能是很困<br>难的。所以大多数数据库公司为了解决此问题，作了如下两方面的工作：<br>(1)扩充SQL，在SQL中引入过程性结构；(2)把SQL嵌入到高级语言中，<br>以便一起完成一个完整的应用。</p>
+<p>二. SQL语言的分类</p>
+<p>SQL语言共分为四大类：数据查询语言DQL，数据操纵语言DML，数据定义语言DDL，数据控制语言DCL。</p>
+<ol>
+<li>数据查询语言DQL<br>数据查询语言DQL基本结构是由SELECT子句，FROM子句，WHERE<br>子句组成的查询块：<br>SELECT &lt;字段名表&gt;<br>FROM &lt;表或视图名&gt;<br>WHERE &lt;查询条件&gt;</li>
+</ol>
+<p>2 .数据操纵语言DML<br>数据操纵语言DML主要有三种形式：<br>1) 插入：INSERT<br>2) 更新：UPDATE<br>3) 删除：DELETE</p>
+<ol>
+<li>数据定义语言DDL<br>数据定义语言DDL用来创建数据库中的各种对象—–表、视图、<br>索引、同义词、聚簇等如：<br>CREATE TABLE/VIEW/INDEX/SYN/CLUSTER<br>| | | | |<br>表 视图 索引 同义词 簇</li>
+</ol>
+<p>DDL操作是隐性提交的！不能rollback</p>
+<ol>
+<li>数据控制语言DCL<br>数据控制语言DCL用来授予或回收访问数据库的某种特权，并控制<br>数据库操纵事务发生的时间及效果，对数据库实行监视等。如：<br>1) GRANT：授权。</li>
+</ol>
+<p>2) ROLLBACK [WORK] TO [SAVEPOINT]：回退到某一点。<br>回滚—ROLLBACK<br>回滚命令使数据库状态回到上次最后提交的状态。其格式为：<br>SQL&gt;ROLLBACK;</p>
+<p>3) COMMIT [WORK]：提交。</p>
+<pre><code>在数据库的插入、删除和修改操作时，只有当事务在提交到数据
+</code></pre><p>库时才算完成。在事务提交前，只有操作数据库的这个人才能有权看<br>到所做的事情，别人只有在最后提交完成后才可以看到。<br>提交数据有三种类型：显式提交、隐式提交及自动提交。下面分<br>别说明这三种类型。</p>
+<p>(1) 显式提交<br>用COMMIT命令直接完成的提交为显式提交。其格式为：<br>SQL&gt;COMMIT；</p>
+<p>(2) 隐式提交<br>用SQL命令间接完成的提交为隐式提交。这些命令是：<br>ALTER，AUDIT，COMMENT，CONNECT，CREATE，DISCONNECT，DROP，<br>EXIT，GRANT，NOAUDIT，QUIT，REVOKE，RENAME。</p>
+<p>(3) 自动提交<br>若把AUTOCOMMIT设置为ON，则在插入、修改、删除语句执行后，<br>系统将自动进行提交，这就是自动提交。其格式为：<br>SQL&gt;SET AUTOCOMMIT ON；</p>
+<h1 id="mysql上利用通配符模糊匹配数据库进行grant"><a href="#mysql上利用通配符模糊匹配数据库进行grant" class="headerlink" title="mysql上利用通配符模糊匹配数据库进行grant"></a>mysql上利用通配符模糊匹配数据库进行grant</h1><p> 给业务搭建数据库时由于采用的时分库策略，导致每个服务器上都有上百个数据库，新用户需要只对这些库有权限读写，由于服务器多，数据库多，如果采用逐个赋权限会很麻烦<br>在mysql中，当我们想对某个用户赋予权限时，对于数据库可以利用通配符（_和%）指定一类数据库进行操作，这样就可以避免逐个操作啦。<br>举例如下，假设我们有数据库，</p>
+<pre><code>root@(none) 09:41:16&gt;show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| bp_crm             |
+| dp_0007            |
+| dp_0019            |
+| dp_normandie_0028  |
+| dp_p4p_0082        |
+| dp_p4p_0169        |
+| home               |
+| mysql              |
+| test               |
++--------------------+
+10 rows in set (0.00 sec)
+</code></pre><p>大家可以看到除了系统db（mysql,information_schema,test）之外，我们有一批报表库是以“dp”开头的，如果我们想创建一个用户，只对这些db可以进行操作，那么可以利用通配符%</p>
+<pre><code>root@(none) 09:52:13&gt;select host,user,password     from mysql.user;
++------------------------+--------+-------------    ------------------------------+
+| host                   | user   | password                                      |
++------------------------+--------+-------------    ------------------------------+
+| localhost              | root   |                                               |
+| linezing128042.sqa.cm4 | root   |                                               |
+| 127.0.0.1              | root   |                                               |
+| localhost              |        |                                               |
+| linezing128042.sqa.cm4 |        |                                               |
+| %                      | lzstat |     *23AE809DDACAF96AF0FD78ED04B6A265E05AA257 |
+| %                      | admin  |     *4ACFE3202A5FF5CF467898FC58AAB1D615029441 |
+| %                      | crm    |     *46E75F13B7337A95AAEB7680B6C52280D9CDF5D2 |
++------------------------+--------+-------------    ------------------------------+
+8 rows in set (0.01 sec)
+
+root@(none) 09:52:17&gt;grant all privileges on     `dp%`.* to dp_admin identified by &apos;mypasswd&apos;;
+Query OK, 0 rows affected (0.00 sec)
+</code></pre><p>注意这里不是单引号’，而是反单引号`</p>
+<pre><code>root@(none) 09:53:56&gt;flush privileges;
+Query OK, 0 rows affected (0.01 sec)
+
+root@(none) 09:54:38&gt;select host,user,password     from mysql.user;
++------------------------+----------+-----------    --------------------------------+
+| host                   | user     | password                                      |
++------------------------+----------+-----------    --------------------------------+
+| localhost              | root     |                                               |
+| linezing128042.sqa.cm4 | root     |                                               |
+| 127.0.0.1              | root     |                                               |
+| localhost              |          |                                               |
+| linezing128042.sqa.cm4 |          |                                               |
+| %                      | lzstat   |     *23AE809DDACAF96AF0FD78ED04B6A265E05AA257 |
+| %                      | admin    |     *4ACFE3202A5FF5CF467898FC58AAB1D615029441 |
+| %                      | crm      |     *46E75F13B7337A95AAEB7680B6C52280D9CDF5D2 |
+| %                      | dp_admin |     *85E26B8AB29FEE8453201A3511DAE24A24059109 |
++------------------------+----------+-----------    --------------------------------+
+9 rows in set (0.00 sec)
+</code></pre><p>我们测试一下远程登录，是否可以访问：</p>
+<pre><code>[mysql@testdb2 ~]$ mysql -udp_admin     -h10.232.128.42 -pmypasswd
+
+mysql&gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| dp_0007            |
+| dp_0019            |
+| dp_normandie_0028  |
+| dp_p4p_0082        |
+| dp_p4p_0169        |
+| test               |
++--------------------+
+7 rows in set (0.00 sec)
+</code></pre><p>可以看到mysql db是无法看到的，这正符合我们的初衷。</p>
+<pre><code>mysql&gt; use dp_0007
+Reading table information for completion of     table and column names
+You can turn off this feature to get a quicker     startup with -A
+
+Database changed
+mysql&gt; show tables;
++--------------------------------------+
+| Tables_in_dp_0007                    |
++--------------------------------------+
+| dpunit_p4p_campaign_d__201006        |
+| dpunit_p4p_effect_contrast_d__201006 |
+| dpunit_p4p_effect_contrast_d__201007 |
+| mytest2                              |
+| mytesttab                            |
++--------------------------------------+
+5 rows in set (0.00 sec)
+
+mysql&gt; select count(*) from     dpunit_p4p_campaign_d__201006;
++----------+
+| count(*) |
++----------+
+|    16622 |
++----------+
+1 row in set (0.00 sec)
+
+mysql&gt; use dp_p4p_0082
+Reading table information for completion of     table and column names
+You can turn off this feature to get a quicker     startup with -A
+
+Database changed
+mysql&gt; show tables;
++---------------------------------------------+
+| Tables_in_dp_p4p_0082                       |
++---------------------------------------------+
+| dim_m_star                                  |
+。。。。。
+| dpunit_p4p_platform_d__201006               |
+| dpunit_p4p_platform_d__201007               |
+| dpunit_p4p_platform_d__201008               |
+| lz_dim_category_level1                      |
+| mytest2                                     |
+| mytesttab                                   |
++---------------------------------------------+
+74 rows in set (0.00 sec)
+
+mysql&gt; select count(*) from     dpunit_p4p_platform_d__201008;
++----------+
+| count(*) |
++----------+
+|    38640 |
++----------+
+1 row in set (0.00 sec)
+</code></pre><p>看到可以访问操作“dp”开头的数据库。</p>
+<p>注意：_也是通配符，在你grant “dp_p4p”开头的数据库权限时需要用”\”做一下转义。</p>
+<pre><code>root@(none) 10:18:15&gt;grant all privileges on     `dp\_p4p%`.* to dp_admin2 identified by     &apos;mypasswd&apos;;
+Query OK, 0 rows affected (0.00 sec)
+
+root@(none) 10:22:41&gt;flush privileges;
+Query OK, 0 rows affected (0.01 sec)
+
+root@(none) 10:22:46&gt;select host,user,password     from mysql.user;
++------------------------+-----------+----------    ---------------------------------+
+| host                   | user      | password                                      |
++------------------------+-----------+----------    ---------------------------------+
+| localhost              | root      |                                               |
+| linezing128042.sqa.cm4 | root      |                                               |
+| 127.0.0.1              | root      |                                               |
+| localhost              |           |                                               |
+| linezing128042.sqa.cm4 |           |                                               |
+| %                      | lzstat    |     *23AE809DDACAF96AF0FD78ED04B6A265E05AA257 |
+| %                      | admin     |     *4ACFE3202A5FF5CF467898FC58AAB1D615029441 |
+| %                      | crm       |     *46E75F13B7337A95AAEB7680B6C52280D9CDF5D2 |
+| %                      | dp_admin  |     *85E26B8AB29FEE8453201A3511DAE24A24059109 |
+| %                      | dp_admin2 |     *85E26B8AB29FEE8453201A3511DAE24A24059109 |
++------------------------+-----------+----------    ---------------------------------+
+10 rows in set (0.00 sec)
+</code></pre><p>我们测试一下远程登录，是否可以访问：</p>
+<pre><code>[mysql@testdb2 ~]$ mysql -udp_admin2     -h10.232.128.42 -pmypasswd
+
+mysql&gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| dp_p4p_0082        |
+| dp_p4p_0169        |
+| test               |
++--------------------+
+4 rows in set (0.00 sec)
+</code></pre><p>注意，dp_admin2只有权限看到”dp_p4p”开头的数据库，dp_p4p_0082和dp_p4p_0169</p>
+<p>同样你也可以在hostname中指定通配符，但不可以在user中指定：</p>
+<pre><code>root@(none) 10:36:53&gt;grant all privileges on     `dp\_p4p%`.* to dp_admin3@&apos;10.254.3.%&apos;     identified by &apos;mypasswd&apos;;
+Query OK, 0 rows affected (0.00 sec)
+
+root@(none) 10:37:25&gt;flush privileges;
+</code></pre><p>表示10.254.3子网段的服务器都可以访问”dp_p4p”这类数据库，注意这里是单引号</p>
+<p>另外，使用反勾号(`)为数据库、表、列和子程序名称加引号。使用单引号(‘)为hostnames、usernames和password加引号。</p>
+<pre><code>root@(none) 10:58:26&gt;grant select on     dp_p4p_0082.`dpunit_p4p_effect_adgroup_bidword_d    __201006` to dp_admin4@&apos;10.254.3.%&apos; identified     by &apos;mypasswd&apos;;
+Query OK, 0 rows affected (0.00 sec)
+
+root@(none) 10:58:22&gt;flush privileges;
+Query OK, 0 rows affected (0.00 sec)
+</code></pre><p>例子中，表用的是反引号`，而给hostname和密码用的是单引号’    </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/15/mysql/mysql_主主/" rel="next" title="mysql主主同步配置">
+                <i class="fa fa-chevron-left"></i> mysql主主同步配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/15/anything/Hbase集群搭建/" rel="prev" title="Hbase集群搭建(亲测)">
+                Hbase集群搭建(亲测) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="qiantu" />
+          <p class="site-author-name" itemprop="name">qiantu</p>
+           
+              <p class="site-description motion-element" itemprop="description">You think you can, you can.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cclouds.me/" title="cclouds" target="_blank">cclouds</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DQL、DML、DDL、DCL的概念与区别"><span class="nav-number">1.</span> <span class="nav-text">DQL、DML、DDL、DCL的概念与区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mysql上利用通配符模糊匹配数据库进行grant"><span class="nav-number">2.</span> <span class="nav-text">mysql上利用通配符模糊匹配数据库进行grant</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">qiantu</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>访问总量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "b587eae6d1cc415a82e921c882914d85",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

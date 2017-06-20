@@ -1,0 +1,1037 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="MAbZIIQ7Dw" />
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="kvm," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="kvm虚拟化管理平台WebVirtMgr部署-完整记录(1)公司机房有一台2U的服务器（64G内存，32核），由于近期新增业务比较多，测试机也要新增，服务器资源十分有限。所以打算在这台2U服务器上部署kvm虚拟化，虚出多台VM出来，以应对新的测试需求。当KVM宿主机越来越多，需要对宿主机的状态进行调控，决定采用WebVirtMgr作为kvm虚拟化的web管理工具，图形化的WEB，让人能更方便的查">
+<meta name="keywords" content="kvm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kvm虚拟化管理平台WebVirtMgr部署-完整记录(1)">
+<meta property="og:url" content="http://yoursite.com/2017/06/15/cloud/cloud/index.html">
+<meta property="og:site_name" content="向山看海">
+<meta property="og:description" content="kvm虚拟化管理平台WebVirtMgr部署-完整记录(1)公司机房有一台2U的服务器（64G内存，32核），由于近期新增业务比较多，测试机也要新增，服务器资源十分有限。所以打算在这台2U服务器上部署kvm虚拟化，虚出多台VM出来，以应对新的测试需求。当KVM宿主机越来越多，需要对宿主机的状态进行调控，决定采用WebVirtMgr作为kvm虚拟化的web管理工具，图形化的WEB，让人能更方便的查">
+<meta property="og:updated_time" content="2017-06-19T03:02:31.249Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kvm虚拟化管理平台WebVirtMgr部署-完整记录(1)">
+<meta name="twitter:description" content="kvm虚拟化管理平台WebVirtMgr部署-完整记录(1)公司机房有一台2U的服务器（64G内存，32核），由于近期新增业务比较多，测试机也要新增，服务器资源十分有限。所以打算在这台2U服务器上部署kvm虚拟化，虚出多台VM出来，以应对新的测试需求。当KVM宿主机越来越多，需要对宿主机的状态进行调控，决定采用WebVirtMgr作为kvm虚拟化的web管理工具，图形化的WEB，让人能更方便的查">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/15/cloud/cloud/"/>
+
+
+
+
+
+  <title>kvm虚拟化管理平台WebVirtMgr部署-完整记录(1) | 向山看海</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">向山看海</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-zjump">
+          <a href="/zjump/" rel="section">
+            
+            zjump
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/15/cloud/cloud/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="qiantu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向山看海">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kvm虚拟化管理平台WebVirtMgr部署-完整记录(1)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-15T14:17:27+08:00">
+                2017-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kvm/" itemprop="url" rel="index">
+                    <span itemprop="name">kvm</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2017/06/15/cloud/cloud/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!-- toc -->
+<h2 id="kvm虚拟化管理平台WebVirtMgr部署-完整记录-1"><a href="#kvm虚拟化管理平台WebVirtMgr部署-完整记录-1" class="headerlink" title="kvm虚拟化管理平台WebVirtMgr部署-完整记录(1)"></a>kvm虚拟化管理平台WebVirtMgr部署-完整记录(1)</h2><p>公司机房有一台2U的服务器（64G内存，32核），由于近期新增业务比较多，测试机也要新增，服务器资源十分有限。所以打算在这台2U服务器上部署kvm虚拟化，虚出多台VM出来，以应对新的测试需求。<br>当KVM宿主机越来越多，需要对宿主机的状态进行调控，决定采用WebVirtMgr作为kvm虚拟化的web管理工具，图形化的WEB，让人能更方便的查看kvm 宿主机的情况和操作<br>WebVirtMgr是近两年来发展较快，比较活跃，非常清新的一个KVM管理平台，提供对宿主机和虚机的统一管理，它有别于kvm自带的图形管理工具（virtual machine manager），让kvm管理变得更为可视化，对中小型kvm应用场景带来了更多方便。<br>WebVirtMgr采用几乎纯Python开发，其前端是基于Python的Django，后端是基于Libvirt的Python接口，将日常kvm的管理操作变的更加的可视化。</p>
+<h2 id="WebVirtMgr特点"><a href="#WebVirtMgr特点" class="headerlink" title="WebVirtMgr特点"></a>WebVirtMgr特点</h2><p>操作简单，易于使用<br>通过libvirt的API接口对kvm进行管理<br>提供对虚拟机生命周期管理<br>WebVirtMgr 功能</p>
+<h2 id="宿主机管理支持以下功能"><a href="#宿主机管理支持以下功能" class="headerlink" title="宿主机管理支持以下功能"></a>宿主机管理支持以下功能</h2><p>CPU利用率<br>内存利用率<br>网络资源池管理<br>存储资源池管理<br>虚拟机镜像<br>虚拟机克隆<br>快照管理<br>日志管理<br>虚机迁移  </p>
+<h2 id="虚拟机管理支持以下功能"><a href="#虚拟机管理支持以下功能" class="headerlink" title="虚拟机管理支持以下功能"></a>虚拟机管理支持以下功能</h2><p>CPU利用率<br>内存利用率<br>光盘管理<br>关/开/暂停虚拟机<br>安装虚拟机<br>VNC console连接<br>创建快照  </p>
+<h2 id="下面对部署过程进行记录，希望能帮助到有用到的朋友们。"><a href="#下面对部署过程进行记录，希望能帮助到有用到的朋友们。" class="headerlink" title="下面对部署过程进行记录，希望能帮助到有用到的朋友们。"></a>下面对部署过程进行记录，希望能帮助到有用到的朋友们。</h2><p>这里我将webvirtmgr服务器和kvm服务器放在同一台机器上部署的，即单机部署<br>系统：Centos 6.8<br>内存:64G<br>CPU:32核<br>ip：192.168.1.17（内网），111.101.186.163（外网）  </p>
+<h2 id="一、首先要安装KVM虚拟化环境，参考下面的一篇博客进行安装："><a href="#一、首先要安装KVM虚拟化环境，参考下面的一篇博客进行安装：" class="headerlink" title="一、首先要安装KVM虚拟化环境，参考下面的一篇博客进行安装："></a>一、首先要安装KVM虚拟化环境，参考下面的一篇博客进行安装：</h2><p>kvm虚拟化管理平台WebVirtMgr部署-虚拟化环境安装-完整记录(0)  </p>
+<h2 id="二、Kvm的管理工具webvirtmgr安装和使用"><a href="#二、Kvm的管理工具webvirtmgr安装和使用" class="headerlink" title="二、Kvm的管理工具webvirtmgr安装和使用"></a>二、Kvm的管理工具webvirtmgr安装和使用</h2><h3 id="1）安装支持的软件源"><a href="#1）安装支持的软件源" class="headerlink" title="1）安装支持的软件源"></a>1）安装支持的软件源</h3><p>[root@openstack ops]#yum -y install <a href="http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm" target="_blank" rel="external">http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm</a>  </p>
+<h3 id="2）安装相关软件"><a href="#2）安装相关软件" class="headerlink" title="2）安装相关软件"></a>2）安装相关软件</h3><hr>
+<p>如果报错说没有下面安装的某些软件，则下载<a href="http://pan.baidu.com/s/1bX3vkE" target="_blank" rel="external">http://pan.baidu.com/s/1bX3vkE</a> （密码：6ucs）  </p>
+<h2 id="将下载的yum-tar-gz解压后的文件替换到-etc-yum-repos-d目录下，然后执行yum-clean-all-amp-amp-yum-makecache"><a href="#将下载的yum-tar-gz解压后的文件替换到-etc-yum-repos-d目录下，然后执行yum-clean-all-amp-amp-yum-makecache" class="headerlink" title="将下载的yum.tar.gz解压后的文件替换到/etc/yum.repos.d目录下，然后执行yum clean all &amp;&amp; yum makecache  "></a>将下载的yum.tar.gz解压后的文件替换到/etc/yum.repos.d目录下，然后执行yum clean all &amp;&amp; yum makecache  </h2><p>[root@openstack ops]#yum -y install git python-pip libvirt-python libxml2-python python-websockify supervisor nginx  </p>
+<h3 id="3）从git-hub中下载相关的webvirtmgr代码"><a href="#3）从git-hub中下载相关的webvirtmgr代码" class="headerlink" title="3）从git-hub中下载相关的webvirtmgr代码"></a>3）从git-hub中下载相关的webvirtmgr代码</h3><p>[root@openstack ops]#cd /usr/local/src/<br>[root@openstack src]#git clone git://github.com/retspen/webvirtmgr.git    （下载地址：<a href="https://pan.baidu.com/s/1pLS3kCj" target="_blank" rel="external">https://pan.baidu.com/s/1pLS3kCj</a>      获取密码：8efm）</p>
+<h3 id="4）安装webvirtmgr"><a href="#4）安装webvirtmgr" class="headerlink" title="4）安装webvirtmgr"></a>4）安装webvirtmgr</h3><p>[root@openstack src]#cd webvirtmgr/<br>[root@openstack webvirtmgr]#pip install -r requirements.txt  </p>
+<h3 id="5）安装数据库"><a href="#5）安装数据库" class="headerlink" title="5）安装数据库"></a>5）安装数据库</h3><p>[root@openstack webvirtmgr]#yum install python-sqlite2   </p>
+<h3 id="6）对django进行环境配置"><a href="#6）对django进行环境配置" class="headerlink" title="6）对django进行环境配置"></a>6）对django进行环境配置</h3><p>[root@openstack webvirtmgr]#pwd<br>/usr/local/src/webvirtmgr<br>[root@openstack webvirtmgr]#./manage.py syncdb           //默认是python执行，如下报错，换用其他版本的python  </p>
+<hr>
+<p>注意此处用默认的python执行上面命令，一般会报错，如下：<br>ImportError: No module named django.core.management   </p>
+<h3 id="这个一般是由于python版本引起的，因为系统自带有好几个版本的python"><a href="#这个一般是由于python版本引起的，因为系统自带有好几个版本的python" class="headerlink" title="这个一般是由于python版本引起的，因为系统自带有好几个版本的python"></a>这个一般是由于python版本引起的，因为系统自带有好几个版本的python</h3><p>[root@openstack webvirtmgr]# python       //按Tab键自查找<br>python python2.6<br>python2 python2.6-config python-config<br>[root@openstack webvirtmgr]# python -V<br>Python 2.6.6  </p>
+<p>由此可看出，系统默认的Python版本是2.6.6<br>说明上面命令默认是python2.6执行的  </p>
+<p>既然使用python2.6执行上面的命令报错，那就换用其他版本python2执行（如果当前是python3.3.0，那么就将下面的/usr/bin/python2换成/usr/bin/python2.6）<br>[root@openstack webvirtmgr]#/usr/bin/python2 manage.py syncdb     //最终发现使用python2执行这个命令就不报错了<br>…………<br>…………<br>You just installed Django’s auth system, which means you don’t have any superusers defined.<br>Would you like to create one now? (yes/no): yes<br>Username (leave blank to use ‘root’): admin<br>Email address: wangshibo@163.com<br>Password:<strong><strong>*</strong></strong><br>Password (again):<strong><strong>*</strong></strong>  </p>
+<hr>
+<p>[root@openstack webvirtmgr]#/usr/bin/python2 manage.py collectstatic          //生成配置文件（同样使用python2版本执行，不要使用默认的python执行）<br>WARNING:root:No local_settings file found.</p>
+<p>You have requested to collect static files at the destination<br>location as specified in your settings.</p>
+<p>This will overwrite existing files!<br>Are you sure you want to do this?</p>
+<p>Type ‘yes’ to continue, or ‘no’ to cancel: yes<br>……….<br>……….</p>
+<p>[root@openstack webvirtmgr]#/usr/bin/python2 manage.py createsuperuser  //添加管理员账号（同样使用python2版本执行，不要使用默认的python执行）<br>WARNING:root:No local_settings file found.<br>Username: ops                                                   //这个是管理员账号，用上面的admin和这个管理员账号都可以登陆webvirtmgr的web界面管理平台<br>Email address: wangshibo@163.com<br>Password:<br>Password (again):<br>Superuser created successfully.</p>
+<h2 id="7）拷贝web到-相关目录"><a href="#7）拷贝web到-相关目录" class="headerlink" title="7）拷贝web到 相关目录"></a>7）拷贝web到 相关目录</h2><p>[root@openstack ops]#mkdir -pv /var/www<br>[root@openstack ops]#cp -Rv /usr/local/src/webvirtmgr /var/www/webvirtmgr</p>
+<h2 id="8）设置ssh"><a href="#8）设置ssh" class="headerlink" title="8）设置ssh"></a>8）设置ssh</h2><p>[root@openstack ops]#ssh-keygen -r rsa             //产生公私钥<br>[root@openstack ops]#ssh-copy-id 192.168.1.17        //由于这里webvirtmgr和kvm服务部署在同一台机器，所以这里本地信任。如果kvm部署在其他机器，那么这个是它的ip<br>[root@openstack ops]#ssh 192.168.1.17 -L localhost:8000:localhost:8000 -L localhost:6080:localhost:60</p>
+<h2 id="9）编辑nginx配置文件"><a href="#9）编辑nginx配置文件" class="headerlink" title="9）编辑nginx配置文件"></a>9）编辑nginx配置文件</h2><p>提前确保/etc/nginx/nginx.conf文件里开启了“include /etc/nginx/conf.d/*.conf;”</p>
+<p>[root@openstack ops]#vim /etc/nginx/conf.d/webvirtmgr.conf           //添加下面内容到文件中<br>server {<br>listen 80 default_server;</p>
+<p>server_name $hostname;</p>
+<p>#access_log /var/log/nginx/webvirtmgr_access_log;</p>
+<p>location /static/ {<br>root /var/www/webvirtmgr/webvirtmgr; # or /srv instead of /var<br>expires max;<br>}</p>
+<p>location / {<br>proxy_pass <a href="http://127.0.0.1:8000" target="_blank" rel="external">http://127.0.0.1:8000</a>;<br>proxy_set_header X-Real-IP $remote_addr;<br>proxy_set_header X-Forwarded-for $proxy_add_x_forwarded_for;<br>proxy_set_header Host $host:$server_port;<br>proxy_set_header X-Forwarded-Proto $remote_addr;<br>proxy_connect_timeout 600;<br>proxy_read_timeout 600;<br>proxy_send_timeout 600;<br>client_max_body_size 1024M; # Set higher depending on your needs<br>}<br>}</p>
+<p>[root@openstack ops]#mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.bak</p>
+<h2 id="10）启动nginx"><a href="#10）启动nginx" class="headerlink" title="10）启动nginx"></a>10）启动nginx</h2><p>[root@openstack ops]#/etc/init.d/nginx restart</p>
+<h2 id="11）修改防火墙规则"><a href="#11）修改防火墙规则" class="headerlink" title="11）修改防火墙规则"></a>11）修改防火墙规则</h2><p>[root@ops ~]#vim /etc/sysconfig/selinux<br>……<br>SELINUX=disabled</p>
+<p>[root@ops ~]#setenforce 0<br>setenforce: SELinux is disabled<br>[root@ops ~]#getenforce<br>Disabled</p>
+<p>[root@openstack ops]#/usr/sbin/setsebool httpd_can_network_connect true</p>
+<h2 id="12）设置-supervisor-如果iptables防火墙开启的话，就必须要开通80、8000、6080端口访问"><a href="#12）设置-supervisor-如果iptables防火墙开启的话，就必须要开通80、8000、6080端口访问" class="headerlink" title="12）设置 supervisor (如果iptables防火墙开启的话，就必须要开通80、8000、6080端口访问)"></a>12）设置 supervisor (如果iptables防火墙开启的话，就必须要开通80、8000、6080端口访问)</h2><p>[root@openstack ops]#chown -R nginx:nginx /var/www/webvirtmgr</p>
+<p>[root@openstack ops]#vim /etc/supervisord.conf     //在文件末尾添加,注意将默认的python改为python2，因为上面只有用这个版本执行才不报错！<br>[program:webvirtmgr]<br>command=/usr/bin/python2 /var/www/webvirtmgr/manage.py run_gunicorn -c /var/www/webvirtmgr/conf/gunicorn.conf.py                     //启动8000端口<br>directory=/var/www/webvirtmgr<br>autostart=true<br>autorestart=true<br>logfile=/var/log/supervisor/webvirtmgr.log<br>log_stderr=true<br>user=nginx</p>
+<p>[program:webvirtmgr-console]<br>command=/usr/bin/python2 /var/www/webvirtmgr/console/webvirtmgr-console                               //启动6080端口（这是控制台vnc端口）<br>directory=/var/www/webvirtmgr<br>autostart=true<br>autorestart=true<br>stdout_logfile=/var/log/supervisor/webvirtmgr-console.log<br>redirect_stderr=true<br>user=nginx<br>[root@openstack ops]#vim /var/www/webvirtmgr/conf/gunicorn.conf.py    //确保下面bind绑定的是本机的8000端口，这个在nginx配置中定义了，被代理的端口<br>bind = ‘127.0.0.1:8000’</p>
+<h2 id="13）设置开机启动"><a href="#13）设置开机启动" class="headerlink" title="13）设置开机启动"></a>13）设置开机启动</h2><p>[root@openstack ops]#chkconfig supervisord on<br>[root@openstack ops]#vim /etc/rc.local<br>/usr/sbin/setsebool httpd_can_network_connect true</p>
+<h2 id="14）启动进程"><a href="#14）启动进程" class="headerlink" title="14）启动进程"></a>14）启动进程</h2><p>[root@openstack ops]#/etc/init.d/supervisord restart<br>15）查看进程<br>[root@openstack ops]#netstat -lnpt    //即可以看到6080和8000已经启动<br>[root@openstack ops]# lsof -i:6080<br>COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME<br>python2 53476 nginx 3u IPv4 364124 0t0 TCP *:6080 (LISTEN)<br>[root@openstack ops]#lsof -i:8000</p>
+<hr>
+<p>一般来说，只要上面的supervisord服务启动了，8000和6080端口就起来了。<br>因为在/etc/supervisord.conf文件里配置了这两个端口的启动设置</p>
+<p>如果supervisord服务启动了，8000和6080端口还是没起来！<br>那么就需要手动启动/etc/supervisord.conf文件里配置的这两个端口的启动命令，即：<br>[root@openstack ops]# /usr/bin/python2 /var/www/webvirtmgr/manage.py run_gunicorn -c /var/www/webvirtmgr/conf/gunicorn.conf.py       //这个命令会一直在操作<br>[root@openstack ops]# /usr/bin/python2 /var/www/webvirtmgr/console/webvirtmgr-console                        //这个命令会一直在操作<br>[root@openstack ops]# /etc/init.d/supervisord restart<br>[root@openstack ops]# lsof -i:8000</p>
+<h2 id="root-openstack-ops-lsof-i-6080"><a href="#root-openstack-ops-lsof-i-6080" class="headerlink" title="[root@openstack ops]# lsof -i:6080"></a>[root@openstack ops]# lsof -i:6080</h2><h2 id="16）web访问"><a href="#16）web访问" class="headerlink" title="16）web访问"></a>16）web访问</h2><p><a href="http://111.101.186.163/login/" target="_blank" rel="external">http://111.101.186.163/login/</a></p>
+<p>这里用超级管理员登陆，只有超级管理员登陆后才能看到“基础构架”窗口</p>
+<p>普通用户登陆后，只能看到“WebVirtMgr”一个窗口</p>
+<p>选择“SSH链接“，设置Label，IP，用户</p>
+<p>注意：Label与IP要相同</p>
+<p>打开后，有报错！看来在上面使用ssh连接的配置环节有误所致！</p>
+<p>解决措施：</p>
+<h2 id="1-在webvirtmgr服务器（服务端）上（这里kvm和WebVirtMgr部署在同一台机器上）创建nginx用户家目录（默认nginx服务安装时是没有nginx家目录的），生成nginx的公私钥"><a href="#1-在webvirtmgr服务器（服务端）上（这里kvm和WebVirtMgr部署在同一台机器上）创建nginx用户家目录（默认nginx服务安装时是没有nginx家目录的），生成nginx的公私钥" class="headerlink" title="1)在webvirtmgr服务器（服务端）上（这里kvm和WebVirtMgr部署在同一台机器上）创建nginx用户家目录（默认nginx服务安装时是没有nginx家目录的），生成nginx的公私钥"></a>1)在webvirtmgr服务器（服务端）上（这里kvm和WebVirtMgr部署在同一台机器上）创建nginx用户家目录（默认nginx服务安装时是没有nginx家目录的），生成nginx的公私钥</h2><p>[root@openstack ops]# cd /home/<br>[root@openstack home]# mkdir nginx<br>[root@openstack home]# chown nginx.nginx nginx/<br>[root@openstack home]# chmod 700 nginx/ -R<br>[root@openstack home]# su - nginx -s /bin/bash<br>-bash-4.1$ ssh-keygen                             #期间输入yes后直接回车，回车<br>-bash-4.1$ touch ~/.ssh/config &amp;&amp; echo -e “StrictHostKeyChecking=no\nUserKnownHostsFile=/dev/null” &gt;&gt; ~/.ssh/config<br>-bash-4.1$ chmod 0600 ~/.ssh/config</p>
+<h2 id="2-在kvm（客服端）服务器上（这里kvm和WebVirtMgr部署在同一台机器上）配置用户，这里默认采用root用户"><a href="#2-在kvm（客服端）服务器上（这里kvm和WebVirtMgr部署在同一台机器上）配置用户，这里默认采用root用户" class="headerlink" title="2)在kvm（客服端）服务器上（这里kvm和WebVirtMgr部署在同一台机器上）配置用户，这里默认采用root用户"></a>2)在kvm（客服端）服务器上（这里kvm和WebVirtMgr部署在同一台机器上）配置用户，这里默认采用root用户</h2><hr>
+<p>如果采用其他用户，比如webvirtmgr，操作如下:<br>[root@openstack ops]#useradd webvirtmgr<br>[root@openstack ops]#echo “123456” | passwd –stdin webvirtmgr<br>[root@openstack ops]#groupadd libvirt</p>
+<h2 id="root-openstack-ops-usermod-G-libvirt-a-webvirtmgr"><a href="#root-openstack-ops-usermod-G-libvirt-a-webvirtmgr" class="headerlink" title="[root@openstack ops]#usermod -G libvirt -a webvirtmgr"></a>[root@openstack ops]#usermod -G libvirt -a webvirtmgr</h2><h2 id="3-在webvirtmgr服务器（服务端）上（这里kvm和WebVirtMgr部署在同一台机器上），将nginx用户的ssh-key上传到kvm服务器上（这里kvm和WebVirtMgr部署在同一台机器上）"><a href="#3-在webvirtmgr服务器（服务端）上（这里kvm和WebVirtMgr部署在同一台机器上），将nginx用户的ssh-key上传到kvm服务器上（这里kvm和WebVirtMgr部署在同一台机器上）" class="headerlink" title="3)在webvirtmgr服务器（服务端）上（这里kvm和WebVirtMgr部署在同一台机器上），将nginx用户的ssh-key上传到kvm服务器上（这里kvm和WebVirtMgr部署在同一台机器上）"></a>3)在webvirtmgr服务器（服务端）上（这里kvm和WebVirtMgr部署在同一台机器上），将nginx用户的ssh-key上传到kvm服务器上（这里kvm和WebVirtMgr部署在同一台机器上）</h2><p>[root@openstack ops]# su - nginx -s /bin/bash<br>-bash-4.1$ ssh-copy-id root@192.168.1.17<br>Warning: Permanently added ‘192.168.1.17’ (RSA) to the list of known hosts.<br>root@192.168.1.17’s password: #输入192.168.1.17即本机的root账号<br>Now try logging into the machine, with “ssh ‘root@192.168.1.17’”, and check in:</p>
+<p>.ssh/authorized_keys</p>
+<h2 id="to-make-sure-we-haven’t-added-extra-keys-that-you-weren’t-expecting"><a href="#to-make-sure-we-haven’t-added-extra-keys-that-you-weren’t-expecting" class="headerlink" title="to make sure we haven’t added extra keys that you weren’t expecting."></a>to make sure we haven’t added extra keys that you weren’t expecting.</h2><p>这里采用的是root用户，如果采用其他用户，比如上面假设的webvirtmgr用户，操作如下:<br>[root@openstack ops]#su - nginx -s /bin/bash</p>
+<h2 id="bash-4-1-ssh-copy-id-webvirtmgr-192-168-0-23"><a href="#bash-4-1-ssh-copy-id-webvirtmgr-192-168-0-23" class="headerlink" title="-bash-4.1$ssh-copy-id webvirtmgr@192.168.0.23"></a>-bash-4.1$ssh-copy-id webvirtmgr@192.168.0.23</h2><h2 id="4）在kvm（客服端）服务器上（这里kvm和WebVirtMgr部署在同一台机器上）配置-libvirt-ssh授权"><a href="#4）在kvm（客服端）服务器上（这里kvm和WebVirtMgr部署在同一台机器上）配置-libvirt-ssh授权" class="headerlink" title="4）在kvm（客服端）服务器上（这里kvm和WebVirtMgr部署在同一台机器上）配置 libvirt ssh授权"></a>4）在kvm（客服端）服务器上（这里kvm和WebVirtMgr部署在同一台机器上）配置 libvirt ssh授权</h2><p>[root@openstack ops]# vim /etc/polkit-1/localauthority/50-local.d/50-libvirt-remote-access.pkla<br>[Remote libvirt SSH access]<br>Identity=unix-user:root #注意这里采用的是root用户<br>Action=org.libvirt.unix.manage<br>ResultAny=yes<br>ResultInactive=yes<br>ResultActive=yes</p>
+<h2 id="root-openstack-ops-chown-R-root-root-etc-polkit-1-localauthority-50-local-d-50-libvirt-remote-access-pkla"><a href="#root-openstack-ops-chown-R-root-root-etc-polkit-1-localauthority-50-local-d-50-libvirt-remote-access-pkla" class="headerlink" title="[root@openstack ops]# chown -R root.root /etc/polkit-1/localauthority/50-local.d/50-libvirt-remote-access.pkla"></a>[root@openstack ops]# chown -R root.root /etc/polkit-1/localauthority/50-local.d/50-libvirt-remote-access.pkla</h2><p>这里采用的是root用户，如果采用其他用户，比如上面假设的webvirtmgr用户，操作如下:<br>[root@openstack ops]#vim /etc/polkit-1/localauthority/50-local.d/50-libvirt-remote-access.pkla<br>[Remote libvirt SSH access]<br>Identity=unix-user:webvirtmgr #这里就设定webvirtmgr用户<br>Action=org.libvirt.unix.manage<br>ResultAny=yes<br>ResultInactive=yes<br>ResultActive=yes</p>
+<h2 id="root-openstack-ops-chown-R-webvirtmgr-webvirtmgr-etc-polkit-1-localauthority-50-local-d-50-libvirt-remote-access-pkla"><a href="#root-openstack-ops-chown-R-webvirtmgr-webvirtmgr-etc-polkit-1-localauthority-50-local-d-50-libvirt-remote-access-pkla" class="headerlink" title="[root@openstack ops]#chown -R webvirtmgr.webvirtmgr /etc/polkit-1/localauthority/50-local.d/50-libvirt-remote-access.pkla"></a>[root@openstack ops]#chown -R webvirtmgr.webvirtmgr /etc/polkit-1/localauthority/50-local.d/50-libvirt-remote-access.pkla</h2><h2 id="5）重启-libvirtd-服务"><a href="#5）重启-libvirtd-服务" class="headerlink" title="5）重启 libvirtd 服务"></a>5）重启 libvirtd 服务</h2><p>/etc/init.d/libvirtd restart</p>
+<p>这样上面报错的问题就迎仍而解了！</p>
+<p>然后重新ssh方式连接就ok了，就不会有上面那个报错了~</p>
+<p>但是，又出现了其他报错（如下）！尼玛～～  接续排查！</p>
+<p>解决措施：</p>
+<p> 在WebVirtMgr服务器本地使用ssh方式连接，在终端命令行里：</p>
+<p>[root@openstack .ssh]# virsh -c qemu+ssh://103.10.86.17/system list<br>The authenticity of host ‘103.10.86.17 (103.10.86.17)’ can’t be established.<br>RSA key fingerprint is 3d:c1:2e:70:e9:e5:1d:84:40:a2:63:82:af:e5:cc:cd.<br>Are you sure you want to continue connecting (yes/no)? yes<br>error: End of file while reading data: Warning: Permanently added ‘103.10.86.17’ (RSA) to the list of known hosts.: Input/output error<br>error: failed to connect to the hypervisor</p>
+<p>看日志 tail /var/log/secure | grep sshd 发现是我这里主动发出断开的.有可能检测到libvirtd有些问题导致的。<br>当时使用virt-manage可以查询到远程的信息.估计是sshd出现的问题把.</p>
+<p>折腾一会，暂时没找到解决方案</p>
+<p>决定先选用通过tcp协议进行迁移的（但是这种方式没有用ssh连接方式安全——）<br>等后面有时间了，再想办法解决上面ssh方式连接的错误吧</p>
+<p>使用tcp进行对远程libvirtd进行连接访问的配置如下：</p>
+<p>1）修改文件/etc/sysconfig/libvirtd，用来启用tcp的端口<br>[root@openstack ops]# cat /etc/sysconfig/libvirtd<br>……..<br>LLIBVIRTD_CONFIG=/etc/libvirt/libvirtd.conf<br>LIBVIRTD_ARGS=”–listen”</p>
+<p>2)修改文件/etc/libvirt/libvirtd.conf<br>[root@openstack ops]#vim /etc/libvirt/libvirtd.conf<br>listen_tls = 0<br>listen_tcp = 1<br>tcp_port = “16509”<br>listen_addr = “0.0.0.0”<br>auth_tcp = “none”</p>
+<p>3)运行 libvirtd<br>[root@openstack ops]#service libvirtd restart</p>
+<p>如果没起效果(我的就没有生效，那么使用命令行.如果生效了，执行下面命令就会报错<br>[root@openstack ops]#libvirtd –daemon –listen –config /etc/libvirt/libvirtd.conf</p>
+<p>4)查看运行进程<br>[root@openstack ops]# ps aux | grep libvirtd<br>root 16563 1.5 0.1 925880 7056 ? Sl 16:01 0:28 libvirtd -d -l –config /etc/libvirt/libvirtd.conf</p>
+<p>5)查看端口<br>[root@openstack ops]# lsof -i:16509</p>
+<p>6）在source host连接dest host远程libvirtd查看信息（也可以用公网ip）<br>[root@openstack ops]# virsh -c qemu+tcp://192.168.1.17/system<br>Welcome to virsh, the virtualization interactive terminal.</p>
+<p>Type: ‘help’ for help with commands<br>‘quit’ to quit</p>
+<p>virsh #</p>
+<p>成功使用tcp去访问libvirtd。</p>
+<p>注意：</p>
+<p>在使用tcp方式连接后，会出现连接终端的情况！</p>
+<p>[root@openstack .ssh]# virsh -c qemu+tcp://192.168.1.17/system<br>error: Cannot recv data: Connection reset by peer<br>error: failed to connect to the hypervisor</p>
+<p>连接断开，重新连接便可。</p>
+<p>[root@openstack ops]# ps aux | grep libvirtd<br>root 59619 0.6 0.0 1008128 22048 ? Sl 19:17 0:06 libvirtd –daemon –config /etc/libvirt/libvirtd.conf –listen<br>root 61081 0.0 0.0 103316 1004 pts/2 S+ 19:33 0:00 grep –color libvirtd<br>[root@openstack ops]# kill -9 59619<br>[root@openstack ops]# ps aux | grep libvirtd<br>root 61083 0.0 0.0 103312 904 pts/2 S+ 19:33 0:00 grep –color libvirtd<br>[root@openstack ops]# libvirtd –daemon –listen –config /etc/libvirt/libvirtd.conf<br>[root@openstack ops]# ps aux | grep libvirtd<br>root 61086 13.5 0.0 418240 6576 ? Sl 19:33 0:00 libvirtd –daemon –listen –config /etc/libvirt/libvirtd.conf<br>root 61176 0.0 0.0 103312 908 pts/2 S+ 19:33 0:00 grep –color libvirtd<br>[root@openstack ops]# virsh -c qemu+tcp://192.168.1.17/system<br>Welcome to virsh, the virtualization interactive terminal.</p>
+<p>Type: ‘help’ for help with commands<br>‘quit’ to quit</p>
+<p>virsh #</p>
+<p>后续发现，webvirtmgr连上后，过一会儿就会断开！</p>
+<p>针对这个情况，可以可以写个定时脚本，如下：</p>
+<p>[root@openstack ops]# cat /usr/local/src/libvirtd.sh</p>
+<p>#!/bin/bash<br>ps -ef | grep “libvirtd –daemon –listen”|grep -v grep|awk -F” “ ‘{print $2}’|xargs kill -9<br>/usr/sbin/libvirtd –daemon –listen –config /etc/libvirt/libvirtd.conf</p>
+<p>[root@openstack ops]# crontab -l</p>
+<ul>
+<li><ul>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>/bin/bash -x /usr/local/src/libvirtd.sh &gt; /dev/null 2&gt;&amp;1</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>sleep 10;/bin/bash -x /usr/local/src/libvirtd.sh &gt; /dev/null 2&gt;&amp;1</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>sleep 20;/bin/bash -x /usr/local/src/libvirtd.sh &gt; /dev/null 2&gt;&amp;1</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>sleep 30;/bin/bash -x /usr/local/src/libvirtd.sh &gt; /dev/null 2&gt;&amp;1</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>sleep 40;/bin/bash -x /usr/local/src/libvirtd.sh &gt; /dev/null 2&gt;&amp;1</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li><ul>
+<li><ul>
+<li>sleep 50;/bin/bash -x /usr/local/src/libvirtd.sh &gt; /dev/null 2&gt;&amp;1</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>一般如上配置后，webvirtmgr里的控制台是可以正常连接虚拟机的。</p>
+<p>但如果webvirtmgr里通过控制台页面(vnc)连接虚拟机失败，可以按照下面的操作方法尝试解决：</p>
+<p>kvm原来的安装方式是客户端需要安装vncviewer，才能看到安装页面，而webvirtmgr使用了novnc，页面通过websocket进行通信。</p>
+<p>1）首先需要安装novnc<br>[root@openstack ops]# yum install -y novnc</p>
+<p>2）防火墙打开vnc的6080端口<br>[root@openstack ops]# vim /etc/sysconfig/iptables<br>…….<br>-A INPUT -p tcp -m state –state NEW -m tcp –dport 6080 -j ACCEPT<br>…….</p>
+<p>[root@openstack ops]# /etc/init.d/iptables restart</p>
+<p>3）由上面可知，webvirtmgr进程通过supervisor管理。这里需要重启supervisor进程<br>[root@openstack ops]# /etc/init.d/supervisord restart</p>
+<p>这样，再次打开Webvirtmgr的控制台，发现就能连上虚拟机了！</p>
+<hr>
+<p>可以在webvirtmgr服务器上通过命令行尝试下连接：<br>[root@openstack ops]# novnc_server –help<br>Usage: novnc_server [–listen PORT] [–vnc VNC_HOST:PORT] [–cert CERT]</p>
+<p>Starts the WebSockets proxy and a mini-webserver and<br>provides a cut-and-paste URL to go to.</p>
+<p>–listen PORT Port for proxy/webserver to listen on<br>Default: 6080<br>–vnc VNC_HOST:PORT VNC server host:port proxy target<br>Default: localhost:5900<br>–cert CERT Path to combined cert/key file<br>Default: self.pem<br>–web WEB Path to web files (e.g. vnc.html)<br>Default: ./</p>
+<p>[root@openstack ops]# novnc_server –listen 192.168.1.17:6086           #端口在6080后的都可以用<br>Warning: could not find self.pem<br>Starting webserver and WebSockets proxy on port 192.168.1.17:6086<br>WARNING: no ‘numpy’ module, HyBi protocol will be slower<br>WebSocket server settings:</p>
+<ul>
+<li>Listen on 192.168.1.17:6086</li>
+<li>Flash security policy server</li>
+<li>Web server. Web root: /usr/share/novnc</li>
+<li>No SSL/TLS support (no cert file)</li>
+<li>proxying from 192.168.1.17:6086 to localhost:5900</li>
+</ul>
+<p>Navigate to this URL:</p>
+<p><a href="http://kvm-server:192.168.1.17:6086/vnc.html?host=kvm-server&amp;port=192.168.1.17:6086" target="_blank" rel="external">http://kvm-server:192.168.1.17:6086/vnc.html?host=kvm-server&amp;port=192.168.1.17:6086</a></p>
+<p>Press Ctrl-C to exit</p>
+<hr>
+<p><strong><strong><strong><em>*</em></strong></strong></strong>当你发现自己的才华撑不起野心时，就请安静下来学习吧<strong><strong><strong><em>*</em></strong></strong></strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kvm/" rel="tag"># kvm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/15/cloud/k8s/" rel="next" title="Kubernetes 安装">
+                <i class="fa fa-chevron-left"></i> Kubernetes 安装
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/15/anything/rocketmq/" rel="prev" title="RocketMQ-Console-Ng  how to install">
+                RocketMQ-Console-Ng  how to install <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="qiantu" />
+          <p class="site-author-name" itemprop="name">qiantu</p>
+           
+              <p class="site-description motion-element" itemprop="description">You think you can, you can.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cclouds.me/" title="cclouds" target="_blank">cclouds</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#kvm虚拟化管理平台WebVirtMgr部署-完整记录-1"><span class="nav-number">1.</span> <span class="nav-text">kvm虚拟化管理平台WebVirtMgr部署-完整记录(1)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebVirtMgr特点"><span class="nav-number">2.</span> <span class="nav-text">WebVirtMgr特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#宿主机管理支持以下功能"><span class="nav-number">3.</span> <span class="nav-text">宿主机管理支持以下功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#虚拟机管理支持以下功能"><span class="nav-number">4.</span> <span class="nav-text">虚拟机管理支持以下功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下面对部署过程进行记录，希望能帮助到有用到的朋友们。"><span class="nav-number">5.</span> <span class="nav-text">下面对部署过程进行记录，希望能帮助到有用到的朋友们。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、首先要安装KVM虚拟化环境，参考下面的一篇博客进行安装："><span class="nav-number">6.</span> <span class="nav-text">一、首先要安装KVM虚拟化环境，参考下面的一篇博客进行安装：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Kvm的管理工具webvirtmgr安装和使用"><span class="nav-number">7.</span> <span class="nav-text">二、Kvm的管理工具webvirtmgr安装和使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1）安装支持的软件源"><span class="nav-number">7.1.</span> <span class="nav-text">1）安装支持的软件源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2）安装相关软件"><span class="nav-number">7.2.</span> <span class="nav-text">2）安装相关软件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将下载的yum-tar-gz解压后的文件替换到-etc-yum-repos-d目录下，然后执行yum-clean-all-amp-amp-yum-makecache"><span class="nav-number">8.</span> <span class="nav-text">将下载的yum.tar.gz解压后的文件替换到/etc/yum.repos.d目录下，然后执行yum clean all && yum makecache  </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3）从git-hub中下载相关的webvirtmgr代码"><span class="nav-number">8.1.</span> <span class="nav-text">3）从git-hub中下载相关的webvirtmgr代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4）安装webvirtmgr"><span class="nav-number">8.2.</span> <span class="nav-text">4）安装webvirtmgr</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5）安装数据库"><span class="nav-number">8.3.</span> <span class="nav-text">5）安装数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6）对django进行环境配置"><span class="nav-number">8.4.</span> <span class="nav-text">6）对django进行环境配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#这个一般是由于python版本引起的，因为系统自带有好几个版本的python"><span class="nav-number">8.5.</span> <span class="nav-text">这个一般是由于python版本引起的，因为系统自带有好几个版本的python</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7）拷贝web到-相关目录"><span class="nav-number">9.</span> <span class="nav-text">7）拷贝web到 相关目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8）设置ssh"><span class="nav-number">10.</span> <span class="nav-text">8）设置ssh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9）编辑nginx配置文件"><span class="nav-number">11.</span> <span class="nav-text">9）编辑nginx配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10）启动nginx"><span class="nav-number">12.</span> <span class="nav-text">10）启动nginx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11）修改防火墙规则"><span class="nav-number">13.</span> <span class="nav-text">11）修改防火墙规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12）设置-supervisor-如果iptables防火墙开启的话，就必须要开通80、8000、6080端口访问"><span class="nav-number">14.</span> <span class="nav-text">12）设置 supervisor (如果iptables防火墙开启的话，就必须要开通80、8000、6080端口访问)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13）设置开机启动"><span class="nav-number">15.</span> <span class="nav-text">13）设置开机启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14）启动进程"><span class="nav-number">16.</span> <span class="nav-text">14）启动进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#root-openstack-ops-lsof-i-6080"><span class="nav-number">17.</span> <span class="nav-text">[root@openstack ops]# lsof -i:6080</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#16）web访问"><span class="nav-number">18.</span> <span class="nav-text">16）web访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-在webvirtmgr服务器（服务端）上（这里kvm和WebVirtMgr部署在同一台机器上）创建nginx用户家目录（默认nginx服务安装时是没有nginx家目录的），生成nginx的公私钥"><span class="nav-number">19.</span> <span class="nav-text">1)在webvirtmgr服务器（服务端）上（这里kvm和WebVirtMgr部署在同一台机器上）创建nginx用户家目录（默认nginx服务安装时是没有nginx家目录的），生成nginx的公私钥</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-在kvm（客服端）服务器上（这里kvm和WebVirtMgr部署在同一台机器上）配置用户，这里默认采用root用户"><span class="nav-number">20.</span> <span class="nav-text">2)在kvm（客服端）服务器上（这里kvm和WebVirtMgr部署在同一台机器上）配置用户，这里默认采用root用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#root-openstack-ops-usermod-G-libvirt-a-webvirtmgr"><span class="nav-number">21.</span> <span class="nav-text">[root@openstack ops]#usermod -G libvirt -a webvirtmgr</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-在webvirtmgr服务器（服务端）上（这里kvm和WebVirtMgr部署在同一台机器上），将nginx用户的ssh-key上传到kvm服务器上（这里kvm和WebVirtMgr部署在同一台机器上）"><span class="nav-number">22.</span> <span class="nav-text">3)在webvirtmgr服务器（服务端）上（这里kvm和WebVirtMgr部署在同一台机器上），将nginx用户的ssh-key上传到kvm服务器上（这里kvm和WebVirtMgr部署在同一台机器上）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#to-make-sure-we-haven’t-added-extra-keys-that-you-weren’t-expecting"><span class="nav-number">23.</span> <span class="nav-text">to make sure we haven’t added extra keys that you weren’t expecting.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bash-4-1-ssh-copy-id-webvirtmgr-192-168-0-23"><span class="nav-number">24.</span> <span class="nav-text">-bash-4.1$ssh-copy-id webvirtmgr@192.168.0.23</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4）在kvm（客服端）服务器上（这里kvm和WebVirtMgr部署在同一台机器上）配置-libvirt-ssh授权"><span class="nav-number">25.</span> <span class="nav-text">4）在kvm（客服端）服务器上（这里kvm和WebVirtMgr部署在同一台机器上）配置 libvirt ssh授权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#root-openstack-ops-chown-R-root-root-etc-polkit-1-localauthority-50-local-d-50-libvirt-remote-access-pkla"><span class="nav-number">26.</span> <span class="nav-text">[root@openstack ops]# chown -R root.root /etc/polkit-1/localauthority/50-local.d/50-libvirt-remote-access.pkla</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#root-openstack-ops-chown-R-webvirtmgr-webvirtmgr-etc-polkit-1-localauthority-50-local-d-50-libvirt-remote-access-pkla"><span class="nav-number">27.</span> <span class="nav-text">[root@openstack ops]#chown -R webvirtmgr.webvirtmgr /etc/polkit-1/localauthority/50-local.d/50-libvirt-remote-access.pkla</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5）重启-libvirtd-服务"><span class="nav-number">28.</span> <span class="nav-text">5）重启 libvirtd 服务</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">qiantu</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>访问总量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "b587eae6d1cc415a82e921c882914d85",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

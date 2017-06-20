@@ -1,0 +1,907 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="MAbZIIQ7Dw" />
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="git," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="原文：  http://www.jianshu.com/p/7a0d6917e009 快速安装 GitLab 并汉化源码安装 GitLab 步骤繁琐：需要安装依赖包，Mysql，Redis，Postfix，Ruby，Nginx……安装完毕还得一个个手动配置这些软件。源码安装容易出错，不顺利的话，一天都搞不定。源码最大的好处是私人定制，如果不做定制化，还是使用官方推荐的 omnibus packa">
+<meta name="keywords" content="git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="快速安装 GitLab 并汉化">
+<meta property="og:url" content="http://yoursite.com/2017/06/15/git/git/index.html">
+<meta property="og:site_name" content="向山看海">
+<meta property="og:description" content="原文：  http://www.jianshu.com/p/7a0d6917e009 快速安装 GitLab 并汉化源码安装 GitLab 步骤繁琐：需要安装依赖包，Mysql，Redis，Postfix，Ruby，Nginx……安装完毕还得一个个手动配置这些软件。源码安装容易出错，不顺利的话，一天都搞不定。源码最大的好处是私人定制，如果不做定制化，还是使用官方推荐的 omnibus packa">
+<meta property="og:updated_time" content="2017-06-19T03:02:31.264Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="快速安装 GitLab 并汉化">
+<meta name="twitter:description" content="原文：  http://www.jianshu.com/p/7a0d6917e009 快速安装 GitLab 并汉化源码安装 GitLab 步骤繁琐：需要安装依赖包，Mysql，Redis，Postfix，Ruby，Nginx……安装完毕还得一个个手动配置这些软件。源码安装容易出错，不顺利的话，一天都搞不定。源码最大的好处是私人定制，如果不做定制化，还是使用官方推荐的 omnibus packa">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/15/git/git/"/>
+
+
+
+
+
+  <title>快速安装 GitLab 并汉化 | 向山看海</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">向山看海</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-zjump">
+          <a href="/zjump/" rel="section">
+            
+            zjump
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/15/git/git/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="qiantu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="向山看海">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">快速安装 GitLab 并汉化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-15T14:17:27+08:00">
+                2017-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2017/06/15/git/git/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!-- toc -->
+<p>原文：  <a href="http://www.jianshu.com/p/7a0d6917e009" target="_blank" rel="external">http://www.jianshu.com/p/7a0d6917e009</a></p>
+<h1 id="快速安装-GitLab-并汉化"><a href="#快速安装-GitLab-并汉化" class="headerlink" title="快速安装 GitLab 并汉化"></a>快速安装 GitLab 并汉化</h1><p>源码安装 GitLab 步骤繁琐：需要安装依赖包，Mysql，Redis，Postfix，Ruby，Nginx……安装完毕还得一个个手动配置这些软件。源码安装容易出错，不顺利的话，一天都搞不定。源码最大的好处是私人定制，如果不做定制化，还是使用官方推荐的 omnibus packages 方式安装，网络好的话，一个小时内搞定。<br>参照官方安装文档，分别在 Ubuntu 14 和 CentOS 6 两个机器上安装，过程非常顺利，没有错误。</p>
+<h1 id="在-Ubuntu-14-安装"><a href="#在-Ubuntu-14-安装" class="headerlink" title="在 Ubuntu 14 安装"></a>在 Ubuntu 14 安装</h1><p>使用国内安装源镜像，加快安装速度。修改/etc/apt/sources.list.d/gitlab-ce.list，添加以下行   </p>
+<pre><code>deb https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/debian jessie main
+</code></pre><h1 id="开始安装："><a href="#开始安装：" class="headerlink" title="开始安装："></a>开始安装：</h1><h1 id="安装依赖包"><a href="#安装依赖包" class="headerlink" title="安装依赖包"></a>安装依赖包</h1><pre><code>sudo apt-get install curl openssh-server ca-certificates postfix
+</code></pre><h1 id="安装-GitLab-社区版"><a href="#安装-GitLab-社区版" class="headerlink" title="安装 GitLab 社区版"></a>安装 GitLab 社区版</h1><pre><code>apt-get install gitlab-ce
+</code></pre><h1 id="初始化，初始化完自动启动-GitLab"><a href="#初始化，初始化完自动启动-GitLab" class="headerlink" title="初始化，初始化完自动启动 GitLab"></a>初始化，初始化完自动启动 GitLab</h1><pre><code>sudo gitlab-ctl reconfigure
+</code></pre><h1 id="在-CentOS-6-安装"><a href="#在-CentOS-6-安装" class="headerlink" title="在 CentOS 6 安装"></a>在 CentOS 6 安装</h1><p>使用国内镜像安装，新建 /etc/yum.repos.d/gitlab-ce.repo，添加以下内容</p>
+<pre><code>[gitlab-ce]
+name=gitlab-ce
+baseurl=http://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el6
+repo_gpgcheck=0
+gpgcheck=0
+enabled=1
+gpgkey=https://packages.gitlab.com/gpg.key
+</code></pre><h1 id="安装步骤："><a href="#安装步骤：" class="headerlink" title="安装步骤："></a>安装步骤：</h1><h1 id="安装依赖包-1"><a href="#安装依赖包-1" class="headerlink" title="安装依赖包"></a>安装依赖包</h1><pre><code>sudo yum install curl openssh-server openssh-clients postfix cronie
+</code></pre><h1 id="启动-postfix-邮件服务"><a href="#启动-postfix-邮件服务" class="headerlink" title="启动 postfix 邮件服务"></a>启动 postfix 邮件服务</h1><pre><code>sudo service postfix start
+</code></pre><h1 id="检查-postfix"><a href="#检查-postfix" class="headerlink" title="检查 postfix"></a>检查 postfix</h1><pre><code>sudo chkconfig postfix on
+</code></pre><h1 id="安装-GitLab-社区版-1"><a href="#安装-GitLab-社区版-1" class="headerlink" title="安装 GitLab 社区版"></a>安装 GitLab 社区版</h1><pre><code>sudo yum install gitlab-ce
+</code></pre><h1 id="初始化-GitLab"><a href="#初始化-GitLab" class="headerlink" title="初始化 GitLab"></a>初始化 GitLab</h1><pre><code>sudo gitlab-ctl reconfigure
+修改 host
+</code></pre><p>添加访问的 host，修改/etc/gitlab/gitlab.rb的external_url</p>
+<pre><code>external_url &apos;http://git.home.com&apos;
+</code></pre><p>vi /etc/hosts，添加 host 映射</p>
+<pre><code>127.0.0.1 git.home.com
+</code></pre><p>每次修改/etc/gitlab/gitlab.rb，都要运行以下命令，让配置生效</p>
+<pre><code>sudo gitlab-ctl reconfigure
+</code></pre><p>配置本机的 host，如：192.168.113.59</p>
+<p>git.home.com。最后，在浏览器打开网址<a href="http://git.home.com，登陆。默认管理员：" target="_blank" rel="external">http://git.home.com，登陆。默认管理员：</a><br>用户名: root<br>密码: 5iveL!fe<br>安装中文语言包（汉化）<br>以下汉化步骤参考此篇文章，首先确认当前安装版本<br>cat /opt/gitlab/embedded/service/gitlab-rails/VERSION<br>当前安装版本是8.5.7，因此中文补丁需要打8.5版本。<br>克隆 GitLab 源码仓库：</p>
+<h1 id="克隆-GitLab-com-仓库"><a href="#克隆-GitLab-com-仓库" class="headerlink" title="克隆 GitLab.com 仓库"></a>克隆 GitLab.com 仓库</h1><p>git clone <a href="https://gitlab.com/larryli/gitlab.git" target="_blank" rel="external">https://gitlab.com/larryli/gitlab.git</a><br>＃或 Gitcafe.com 镜像，速度更快<br>git clone <a href="https://gitcafe.com/larryli/gitlab.git" target="_blank" rel="external">https://gitcafe.com/larryli/gitlab.git</a><br>运行汉化补丁：</p>
+<h1 id="8-5-版本的汉化补丁（8-5-stable是英文稳定版，8-5-zh是中文版，两个-diff-结果便是汉化补丁）"><a href="#8-5-版本的汉化补丁（8-5-stable是英文稳定版，8-5-zh是中文版，两个-diff-结果便是汉化补丁）" class="headerlink" title="8.5 版本的汉化补丁（8-5-stable是英文稳定版，8-5-zh是中文版，两个 diff 结果便是汉化补丁）"></a>8.5 版本的汉化补丁（8-5-stable是英文稳定版，8-5-zh是中文版，两个 diff 结果便是汉化补丁）</h1><p>sudo git diff origin/8-5-stable..8-5-zh &gt; /tmp/8.5.diff</p>
+<h1 id="停止-gitlab"><a href="#停止-gitlab" class="headerlink" title="停止 gitlab"></a>停止 gitlab</h1><p>sudo gitlab-ctl stop</p>
+<h1 id="应用汉化补丁"><a href="#应用汉化补丁" class="headerlink" title="应用汉化补丁"></a>应用汉化补丁</h1><p>cd /opt/gitlab/embedded/service/gitlab-rails<br>git apply /tmp/8.5.diff  </p>
+<h1 id="启动gitlab"><a href="#启动gitlab" class="headerlink" title="启动gitlab"></a>启动gitlab</h1><p>sudo gitlab-ctl start<br>至此，汉化完毕。打开地址<a href="http://git.home.com，便会看到中文版的GitLab。如下" target="_blank" rel="external">http://git.home.com，便会看到中文版的GitLab。如下</a><br>[图片]</p>
+<p>安装完成。<br>备份<br>如果是生产环境，备份是必须的。需要备份的文件：配置文件和数据文件。<br>备份配置文件<br>配置文件含密码等敏感信息，不要和数据备份文件放在一起。<br>sh -c ‘umask 0077; tar -cf $(date “+etc-gitlab-%s.tar”) -C /etc/gitlab’<br>备份数据文件<br>默认数据备份目录是/var/opt/gitlab/backups，手动创建备份文件：</p>
+<h1 id="Omnibus-方式安装使用以下命令备份"><a href="#Omnibus-方式安装使用以下命令备份" class="headerlink" title="Omnibus 方式安装使用以下命令备份"></a>Omnibus 方式安装使用以下命令备份</h1><p>sudo gitlab-rake gitlab:backup:create<br>日常备份，添加 crontab，运行crontab -e</p>
+<h1 id="每天2点执行备份"><a href="#每天2点执行备份" class="headerlink" title="每天2点执行备份"></a>每天2点执行备份</h1><p>0 2 <em> </em> * /opt/gitlab/bin/gitlab-rake gitlab:backup:create CRON=1<br>如要修改备份周期和目录，在/etc/gitlab/gitlab.rb中修改以下两个选项</p>
+<h1 id="设置备份周期为7天-604800秒"><a href="#设置备份周期为7天-604800秒" class="headerlink" title="设置备份周期为7天 - 604800秒"></a>设置备份周期为7天 - 604800秒</h1><p>gitlab_rails[‘backup_keep_time’] = 604800</p>
+<h1 id="备份目录"><a href="#备份目录" class="headerlink" title="备份目录"></a>备份目录</h1><p>gitlab_rails[‘backup_path’] = ‘/mnt/backups’<br>恢复<br>恢复之前，确保备份文件所安装 GitLab 和当前要恢复的 GitLab 版本一致。首先，恢复配置文件：<br>sudo mv /etc/gitlab /etc/gitlab.$(date +%s)</p>
+<h1 id="将下面配置备份文件的时间戳改为你所备份的文件的时间戳"><a href="#将下面配置备份文件的时间戳改为你所备份的文件的时间戳" class="headerlink" title="将下面配置备份文件的时间戳改为你所备份的文件的时间戳"></a>将下面配置备份文件的时间戳改为你所备份的文件的时间戳</h1><pre><code>sudo tar -xf etc-gitlab-1399948539.tar -C /
+恢复数据文件
+</code></pre><h1 id="将数据备份文件拷贝至备份目录"><a href="#将数据备份文件拷贝至备份目录" class="headerlink" title="将数据备份文件拷贝至备份目录"></a>将数据备份文件拷贝至备份目录</h1><pre><code>sudo cp 1393513186_gitlab_backup.tar /var/opt/gitlab/backups/
+</code></pre><h1 id="停止连接数据库的进程"><a href="#停止连接数据库的进程" class="headerlink" title="停止连接数据库的进程"></a>停止连接数据库的进程</h1><pre><code>sudo gitlab-ctl stop unicorn
+sudo gitlab-ctl stop sidekiq
+</code></pre><h1 id="恢复1393513186这个备份文件，将覆盖GitLab数据库！"><a href="#恢复1393513186这个备份文件，将覆盖GitLab数据库！" class="headerlink" title="恢复1393513186这个备份文件，将覆盖GitLab数据库！"></a>恢复1393513186这个备份文件，将覆盖GitLab数据库！</h1><pre><code>sudo gitlab-rake gitlab:backup:restore BACKUP=1393513186
+</code></pre><h1 id="启动-GitLab"><a href="#启动-GitLab" class="headerlink" title="启动 GitLab"></a>启动 GitLab</h1><pre><code>sudo gitlab-ctl start
+</code></pre><h1 id="检查-GitLab"><a href="#检查-GitLab" class="headerlink" title="检查 GitLab"></a>检查 GitLab</h1><pre><code>sudo gitlab-rake gitlab:check SANITIZE=true
+</code></pre><h1 id="持续集成-GitLab-CI"><a href="#持续集成-GitLab-CI" class="headerlink" title="持续集成(GitLab-CI)"></a>持续集成(GitLab-CI)</h1><pre><code>GitLab 从 8.0 之后就集成了GitLab-CI，所以不需要再另外安装                    CI。但需要安装Runner
+</code></pre><h2 id="1-添加-Runner-安装源"><a href="#1-添加-Runner-安装源" class="headerlink" title="1.添加 Runner 安装源"></a>1.添加 Runner 安装源</h2><h1 id="For-Debian-Ubuntu"><a href="#For-Debian-Ubuntu" class="headerlink" title="For Debian/Ubuntu"></a>For Debian/Ubuntu</h1><pre><code>curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-ci-multi-runner/script.deb.sh | sudo bash
+</code></pre><h3 id="For-CentOS"><a href="#For-CentOS" class="headerlink" title="For CentOS"></a>For CentOS</h3><pre><code>curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-ci-mul    ti-runner/script.rpm.sh | sudo bash
+</code></pre><h2 id="安装gitlab-ci-multi-runner"><a href="#安装gitlab-ci-multi-runner" class="headerlink" title="安装gitlab-ci-multi-runner"></a>安装gitlab-ci-multi-runner</h2><h3 id="For-Debian-Ubuntu-1"><a href="#For-Debian-Ubuntu-1" class="headerlink" title="For Debian/Ubuntu"></a>For Debian/Ubuntu</h3><pre><code>apt-get install gitlab-ci-multi-runner
+</code></pre><h3 id="For-CentOS-1"><a href="#For-CentOS-1" class="headerlink" title="For CentOS"></a>For CentOS</h3><pre><code>yum install gitlab-ci-multi-runner
+</code></pre><p>2.注册 Runner。获取Token：以管理员身份登录GitLab，进入管理区域，点击侧边栏的Runner，如下图，“注册授权码”后的字符串便是Token。<br>[图片]</p>
+<pre><code>sudo gitlab-ci-multi-runner register
+
+Running in system-mode.
+
+Please enter the gitlab-ci coordinator URL (e.g. https://gitlab.com/ci):
+http://git.home.com/ci
+Please enter the gitlab-ci token for this runner:
+xxxx             # 输入Token
+Please enter the gitlab-ci description for this runner:
+[xxy-web-test-02]: test-runner  # 输入runner的名称
+Please enter the gitlab-ci tags for this runner (comma separated):
+test,php         # 输入runner的标签，以区分不同的runner，标签间逗号分隔
+Registering runner... succeeded                     runner=YDPz2or3
+Please enter the executor: ssh, shell, parallels, docker, docker-ssh,     virtualbox:
+shell
+Runner registered successfully. Feel free to start it, but if it&apos;s running     already the config should be automatically reloaded!
+注册完成便可在上图中查看你所注册的Runner。至此，所有安装完毕，Runner的构建，    后续补充。
+</code></pre>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/git/" rel="tag"># git</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/15/git/git_use/" rel="next" title="git crlf换行符的问题解决">
+                <i class="fa fa-chevron-left"></i> git crlf换行符的问题解决
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/15/cloud/k8s/" rel="prev" title="Kubernetes 安装">
+                Kubernetes 安装 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="qiantu" />
+          <p class="site-author-name" itemprop="name">qiantu</p>
+           
+              <p class="site-description motion-element" itemprop="description">You think you can, you can.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cclouds.me/" title="cclouds" target="_blank">cclouds</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#快速安装-GitLab-并汉化"><span class="nav-number">1.</span> <span class="nav-text">快速安装 GitLab 并汉化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在-Ubuntu-14-安装"><span class="nav-number">2.</span> <span class="nav-text">在 Ubuntu 14 安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开始安装："><span class="nav-number">3.</span> <span class="nav-text">开始安装：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装依赖包"><span class="nav-number">4.</span> <span class="nav-text">安装依赖包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装-GitLab-社区版"><span class="nav-number">5.</span> <span class="nav-text">安装 GitLab 社区版</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#初始化，初始化完自动启动-GitLab"><span class="nav-number">6.</span> <span class="nav-text">初始化，初始化完自动启动 GitLab</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在-CentOS-6-安装"><span class="nav-number">7.</span> <span class="nav-text">在 CentOS 6 安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装步骤："><span class="nav-number">8.</span> <span class="nav-text">安装步骤：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装依赖包-1"><span class="nav-number">9.</span> <span class="nav-text">安装依赖包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动-postfix-邮件服务"><span class="nav-number">10.</span> <span class="nav-text">启动 postfix 邮件服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#检查-postfix"><span class="nav-number">11.</span> <span class="nav-text">检查 postfix</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装-GitLab-社区版-1"><span class="nav-number">12.</span> <span class="nav-text">安装 GitLab 社区版</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#初始化-GitLab"><span class="nav-number">13.</span> <span class="nav-text">初始化 GitLab</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#克隆-GitLab-com-仓库"><span class="nav-number">14.</span> <span class="nav-text">克隆 GitLab.com 仓库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-5-版本的汉化补丁（8-5-stable是英文稳定版，8-5-zh是中文版，两个-diff-结果便是汉化补丁）"><span class="nav-number">15.</span> <span class="nav-text">8.5 版本的汉化补丁（8-5-stable是英文稳定版，8-5-zh是中文版，两个 diff 结果便是汉化补丁）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#停止-gitlab"><span class="nav-number">16.</span> <span class="nav-text">停止 gitlab</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用汉化补丁"><span class="nav-number">17.</span> <span class="nav-text">应用汉化补丁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动gitlab"><span class="nav-number">18.</span> <span class="nav-text">启动gitlab</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Omnibus-方式安装使用以下命令备份"><span class="nav-number">19.</span> <span class="nav-text">Omnibus 方式安装使用以下命令备份</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#每天2点执行备份"><span class="nav-number">20.</span> <span class="nav-text">每天2点执行备份</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设置备份周期为7天-604800秒"><span class="nav-number">21.</span> <span class="nav-text">设置备份周期为7天 - 604800秒</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#备份目录"><span class="nav-number">22.</span> <span class="nav-text">备份目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#将下面配置备份文件的时间戳改为你所备份的文件的时间戳"><span class="nav-number">23.</span> <span class="nav-text">将下面配置备份文件的时间戳改为你所备份的文件的时间戳</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#将数据备份文件拷贝至备份目录"><span class="nav-number">24.</span> <span class="nav-text">将数据备份文件拷贝至备份目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#停止连接数据库的进程"><span class="nav-number">25.</span> <span class="nav-text">停止连接数据库的进程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#恢复1393513186这个备份文件，将覆盖GitLab数据库！"><span class="nav-number">26.</span> <span class="nav-text">恢复1393513186这个备份文件，将覆盖GitLab数据库！</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动-GitLab"><span class="nav-number">27.</span> <span class="nav-text">启动 GitLab</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#检查-GitLab"><span class="nav-number">28.</span> <span class="nav-text">检查 GitLab</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#持续集成-GitLab-CI"><span class="nav-number">29.</span> <span class="nav-text">持续集成(GitLab-CI)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-添加-Runner-安装源"><span class="nav-number">29.1.</span> <span class="nav-text">1.添加 Runner 安装源</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#For-Debian-Ubuntu"><span class="nav-number">30.</span> <span class="nav-text">For Debian/Ubuntu</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#For-CentOS"><span class="nav-number">30.0.1.</span> <span class="nav-text">For CentOS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装gitlab-ci-multi-runner"><span class="nav-number">30.1.</span> <span class="nav-text">安装gitlab-ci-multi-runner</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#For-Debian-Ubuntu-1"><span class="nav-number">30.1.1.</span> <span class="nav-text">For Debian/Ubuntu</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#For-CentOS-1"><span class="nav-number">30.1.2.</span> <span class="nav-text">For CentOS</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">qiantu</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>访问总量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "b587eae6d1cc415a82e921c882914d85",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
