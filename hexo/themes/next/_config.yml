@@ -46,6 +46,7 @@ index_with_subtitle: false
 menu:
   home: /
   zjump: /zjump/
+  envmanage: /envmanage/
   categories: /categories/
   archives: /archives/
   tags: /tags/
