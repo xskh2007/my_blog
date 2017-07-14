@@ -14,11 +14,12 @@ date: 2017-07-12 10:46:32
 ## 项目开发背景 ##
 
 	1、由于多项目并行开发，系统架构不断拆分导致一个环境就需要几十台虚拟机。需要很多的开发测试环境。
-	2、一个项目上线后这些环境又会有没人维护的尴尬局面。继续给后面的项目用的话又会有各种缺少表结构，配置文件。包依赖等问题。
+	2、一个项目上线后这些环境又会有没人维护的尴尬局面。继续给后面的项目用的话又会有各种缺少表结构，
+	   配置文件。包依赖等问题。
 	3、现阶段如果新加一个环境的话基本上没2.3天时间是搞不定的。而且会有各种遗漏和手误。有些错误甚至是很难发现的
 #### 新建一个环境的具体事情如下：####
 	
-	1、批量克隆虚拟机
+	1、批量克隆虚拟机(基于zstack企业版)
 	2、批量创建对应的jenkinsjob
 	3、跳板机资产等级
 	4、nginx配置文件修改为对应的ip
@@ -28,7 +29,7 @@ date: 2017-07-12 10:46:32
 
 ## 项目功能程流程图 ##
 
-![Screenshot](https://raw.githubusercontent.com/xskh2007/xskh2007.github.io/master/images/envmanage/envmanage.jpg) 
+![Screenshot](https://raw.githubusercontent.com/xskh2007/xskh2007.github.io/master/images/envmanage/envmanage.png) 
 
 ## 项目的开发方法
 	在jumpserver0.3.2基础上加celery异步任务实现
