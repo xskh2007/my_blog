@@ -51,6 +51,7 @@ menu:
   archives: /archives/
   tags: /tags/
   about: /about/
+  books: /books/
   #sitemap: /sitemap.xml
   #commonweal: /404.html
 
@@ -470,7 +471,7 @@ calendar:
 
 # Algolia Search
 algolia_search:
-  enable: true
+  enable: false
   hits:
     per_page: 10
   labels:
