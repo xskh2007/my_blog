@@ -9,9 +9,8 @@ tags:
 在之前一篇文章：Centos7部署Kubernetes集群，中已经搭建了基本的K8s集群，本文将在此基础之上继续搭建K8s DashBoard。
 ## yaml文件
 编辑dashboard.yaml，注意或更改以下部分：
-gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1
--  --apiserver-host=http://10.0.251.148:8080
 
+	[root@k8s-master ~]# cat dashboard.yaml
 	apiVersion: extensions/v1beta1
 	kind: Deployment
 	metadata:
@@ -30,7 +29,7 @@ gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1
 		spec:
 		  containers:
 		  - name: kubernetes-dashboard
-			image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1
+			image: registry.cn-hangzhou.aliyuncs.com/kube_containers/kubernetes-dashboard-amd64
 			resources:
 			  # keep request = limit to keep this container in guaranteed class
 			  limits:
@@ -42,16 +41,18 @@ gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1
 			ports:
 			- containerPort: 9090
 			args:
-			 -  --apiserver-host=http://10.0.251.148:8080
+			 -  --apiserver-host=http://192.168.4.155:8080
 			livenessProbe:
 			  httpGet:
 				path: /
 				port: 9090
 			  initialDelaySeconds: 30
 			  timeoutSeconds: 30
+
 			  
 编辑dashboardsvc.yaml文件：
 
+	[root@k8s-master ~]# cat dashboardsvc.yaml 
 	apiVersion: v1
 	kind: Service
 	metadata:
@@ -68,9 +69,7 @@ gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1
 		targetPort: 9090
 		
 ## 镜像准备
-在dashboard.yaml中定义了dashboard所用的镜像：gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1（当然你可以选择其他的版
-本），另外，启动k8s的pod还需要一个额外的镜像：registry.access.redhat.com/rhel7/pod-infrastructure:latest（node中，/etc/kubernetes/kubele
-t的配置），由于一些众所周知的原因，这两个镜像在国内是下载不下来的，以下介绍如何准备这两个镜像。
+在dashboard.yaml中定义了dashboard所用的镜像：gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1（当然你可以选择其他的版本），另外，启动k8s的pod还需要一个额外的镜像：registry.access.redhat.com/rhel7/pod-infrastructure:latest（node中，/etc/kubernetes/kubelet的配置），由于一些众所周知的原因，这两个镜像在国内是下载不下来的，以下介绍如何准备这两个镜像。
 
 ### 从阿里云下载
 阿里云docker下载地址：https://dev.aliyun.com/search.html
