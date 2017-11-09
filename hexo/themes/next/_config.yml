@@ -47,6 +47,7 @@ menu:
   home: /
   zjump: /zjump/
   envmanage: /envmanage/
+  nginxadmin: /nginxadmin/
   categories: /categories/
   archives: /archives/
   tags: /tags/

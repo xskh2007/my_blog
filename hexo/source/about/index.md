@@ -14,7 +14,7 @@ date: 2017-06-12 14:10:13
 ### 关于本人
 
 ![Screenshot](https://raw.githubusercontent.com/xskh2007/xskh2007.github.io/master/img/qwer.jpg)  
- - 王钱土  
+ - someone  
  - 80后    
  - 专注于自动化运维  
  - QQ:261767353
